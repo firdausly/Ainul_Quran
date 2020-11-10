@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ainul Quran</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <script src="/webjars/jquery/jquery.min.js" ></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<style>
+    body{
+        background: hsl(150,85%,97%);
+        }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light clearfilter" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand " th:href="@{/}">Ainul-Quran</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarcollapsee" aria-controls="navbarcollapsee" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="text-white">Menu</span>
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarcollapsee">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link " th:href="@{/vocab}">View Vocabulary</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/search}">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " th:href="@{/logout}">Log out</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/profile}">Welcome <span sec:authentication="name"></span></a>
+                </li>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5 clearfilter">
+    <div class="row">
+        <div class="col-lg-4 border border-top-0 border-left-0 border-bottom-0 ">
+        <h2>Surah List</h2>
+            <br>
+            <ul class="list-group" id="myList">
+                <!-- <li class="list-group-item">First item</li> -->
+                <a th:href="@{/surah/1}" class="list-group-item"> <span class="badge">1</span> Al-Faatiha<br><i> The Opening</i></a><a th:href="@{/surah/2}" class="list-group-item"> <span class="badge">2</span> Al-Baqara<br><i> The Cow</i></a><a th:href="@{/surah/3}" class="list-group-item"> <span class="badge">3</span> Aal-i-Imraan<br><i> The Family of Imraan</i></a><a th:href="@{/surah/4}" class="list-group-item"> <span class="badge">4</span> An-Nisaa<br><i> The Women</i></a><a th:href="@{/surah/5}" class="list-group-item"> <span class="badge">5</span> Al-Maaida<br><i> The Table</i></a><a th:href="@{/surah/6}" class="list-group-item"> <span class="badge">6</span> Al-An'aam<br><i> The Cattle</i></a><a th:href="@{/surah/7}" class="list-group-item"> <span class="badge">7</span> Al-A'raaf<br><i> The Heights</i></a><a th:href="@{/surah/8}" class="list-group-item"> <span class="badge">8</span> Al-Anfaal<br><i> The Spoils of War</i></a><a th:href="@{/surah/9}" class="list-group-item"> <span class="badge">9</span> At-Tawba<br><i> The Repentance</i></a><a th:href="@{/surah/10}" class="list-group-item"> <span class="badge">10</span> Yunus<br><i> Jonas</i></a><a th:href="@{/surah/11}" class="list-group-item"> <span class="badge">11</span> Hud<br><i> Hud</i></a><a th:href="@{/surah/12}" class="list-group-item"> <span class="badge">12</span> Yusuf<br><i> Joseph</i></a><a th:href="@{/surah/13}" class="list-group-item"> <span class="badge">13</span> Ar-Ra'd<br><i> The Thunder</i></a><a th:href="@{/surah/14}" class="list-group-item"> <span class="badge">14</span> Ibrahim<br><i> Abraham</i></a><a th:href="@{/surah/15}" class="list-group-item"> <span class="badge">15</span> Al-Hijr<br><i> The Rock</i></a><a th:href="@{/surah/16}" class="list-group-item"> <span class="badge">16</span> An-Nahl<br><i> The Bee</i></a><a th:href="@{/surah/17}" class="list-group-item"> <span class="badge">17</span> Al-Israa<br><i> The Night Journey</i></a><a th:href="@{/surah/18}" class="list-group-item"> <span class="badge">18</span> Al-Kahf<br><i> The Cave</i></a><a th:href="@{/surah/19}" class="list-group-item"> <span class="badge">19</span> Maryam<br><i> Mary</i></a><a th:href="@{/surah/20}" class="list-group-item"> <span class="badge">20</span> Taa-Haa<br><i> Taa-Haa</i></a><a th:href="@{/surah/21}" class="list-group-item"> <span class="badge">21</span> Al-Anbiyaa<br><i> The Prophets</i></a><a th:href="@{/surah/22}" class="list-group-item"> <span class="badge">22</span> Al-Hajj<br><i> The Pilgrimage</i></a><a th:href="@{/surah/23}" class="list-group-item"> <span class="badge">23</span> Al-Muminoon<br><i> The Believers</i></a><a th:href="@{/surah/24}" class="list-group-item"> <span class="badge">24</span> An-Noor<br><i> The Light</i></a><a th:href="@{/surah/25}" class="list-group-item"> <span class="badge">25</span> Al-Furqaan<br><i> The Criterion</i></a><a th:href="@{/surah/26}" class="list-group-item"> <span class="badge">26</span> Ash-Shu'araa<br><i> The Poets</i></a><a th:href="@{/surah/27}" class="list-group-item"> <span class="badge">27</span> An-Naml<br><i> The Ant</i></a><a th:href="@{/surah/28}" class="list-group-item"> <span class="badge">28</span> Al-Qasas<br><i> The Stories</i></a><a th:href="@{/surah/29}" class="list-group-item"> <span class="badge">29</span> Al-Ankaboot<br><i> The Spider</i></a><a th:href="@{/surah/30}" class="list-group-item"> <span class="badge">30</span> Ar-Room<br><i> The Romans</i></a><a th:href="@{/surah/31}" class="list-group-item"> <span class="badge">31</span> Luqman<br><i> Luqman</i></a><a th:href="@{/surah/32}" class="list-group-item"> <span class="badge">32</span> As-Sajda<br><i> The Prostration</i></a><a th:href="@{/surah/33}" class="list-group-item"> <span class="badge">33</span> Al-Ahzaab<br><i> The Clans</i></a><a th:href="@{/surah/34}" class="list-group-item"> <span class="badge">34</span> Saba<br><i> Sheba</i></a><a th:href="@{/surah/35}" class="list-group-item"> <span class="badge">35</span> Faatir<br><i> The Originator</i></a><a th:href="@{/surah/36}" class="list-group-item"> <span class="badge">36</span> Yaseen<br><i> Yaseen</i></a><a th:href="@{/surah/37}" class="list-group-item"> <span class="badge">37</span> As-Saaffaat<br><i> Those drawn up in Ranks</i></a><a th:href="@{/surah/38}" class="list-group-item"> <span class="badge">38</span> Saad<br><i> The letter Saad</i></a><a th:href="@{/surah/39}" class="list-group-item"> <span class="badge">39</span> Az-Zumar<br><i> The Groups</i></a><a th:href="@{/surah/40}" class="list-group-item"> <span class="badge">40</span> Al-Ghaafir<br><i> The Forgiver</i></a><a th:href="@{/surah/41}" class="list-group-item"> <span class="badge">41</span> Fussilat<br><i> Explained in detail</i></a><a th:href="@{/surah/42}" class="list-group-item"> <span class="badge">42</span> Ash-Shura<br><i> Consultation</i></a><a th:href="@{/surah/43}" class="list-group-item"> <span class="badge">43</span> Az-Zukhruf<br><i> Ornaments of gold</i></a><a th:href="@{/surah/44}" class="list-group-item"> <span class="badge">44</span> Ad-Dukhaan<br><i> The Smoke</i></a><a th:href="@{/surah/45}" class="list-group-item"> <span class="badge">45</span> Al-Jaathiya<br><i> Crouching</i></a><a th:href="@{/surah/46}" class="list-group-item"> <span class="badge">46</span> Al-Ahqaf<br><i> The Dunes</i></a><a th:href="@{/surah/47}" class="list-group-item"> <span class="badge">47</span> Muhammad<br><i> Muhammad</i></a><a th:href="@{/surah/48}" class="list-group-item"> <span class="badge">48</span> Al-Fath<br><i> The Victory</i></a><a th:href="@{/surah/49}" class="list-group-item"> <span class="badge">49</span> Al-Hujuraat<br><i> The Inner Apartments</i></a><a th:href="@{/surah/50}" class="list-group-item"> <span class="badge">50</span> Qaaf<br><i> The letter Qaaf</i></a><a th:href="@{/surah/51}" class="list-group-item"> <span class="badge">51</span> Adh-Dhaariyat<br><i> The Winnowing Winds</i></a><a th:href="@{/surah/52}" class="list-group-item"> <span class="badge">52</span> At-Tur<br><i> The Mount</i></a><a th:href="@{/surah/53}" class="list-group-item"> <span class="badge">53</span> An-Najm<br><i> The Star</i></a><a th:href="@{/surah/54}" class="list-group-item"> <span class="badge">54</span> Al-Qamar<br><i> The Moon</i></a><a th:href="@{/surah/55}" class="list-group-item"> <span class="badge">55</span> Ar-Rahmaan<br><i> The Beneficent</i></a><a th:href="@{/surah/56}" class="list-group-item"> <span class="badge">56</span> Al-Waaqia<br><i> The Inevitable</i></a><a th:href="@{/surah/57}" class="list-group-item"> <span class="badge">57</span> Al-Hadid<br><i> The Iron</i></a><a th:href="@{/surah/58}" class="list-group-item"> <span class="badge">58</span> Al-Mujaadila<br><i> The Pleading Woman</i></a><a th:href="@{/surah/59}" class="list-group-item"> <span class="badge">59</span> Al-Hashr<br><i> The Exile</i></a><a th:href="@{/surah/60}" class="list-group-item"> <span class="badge">60</span> Al-Mumtahana<br><i> She that is to be examined</i></a><a th:href="@{/surah/61}" class="list-group-item"> <span class="badge">61</span> As-Saff<br><i> The Ranks</i></a><a th:href="@{/surah/62}" class="list-group-item"> <span class="badge">62</span> Al-Jumu'a<br><i> Friday</i></a><a th:href="@{/surah/63}" class="list-group-item"> <span class="badge">63</span> Al-Munaafiqoon<br><i> The Hypocrites</i></a><a th:href="@{/surah/64}" class="list-group-item"> <span class="badge">64</span> At-Taghaabun<br><i> Mutual Disillusion</i></a><a th:href="@{/surah/65}" class="list-group-item"> <span class="badge">65</span> At-Talaaq<br><i> Divorce</i></a><a th:href="@{/surah/66}" class="list-group-item"> <span class="badge">66</span> At-Tahrim<br><i> The Prohibition</i></a><a th:href="@{/surah/67}" class="list-group-item"> <span class="badge">67</span> Al-Mulk<br><i> The Sovereignty</i></a><a th:href="@{/surah/68}" class="list-group-item"> <span class="badge">68</span> Al-Qalam<br><i> The Pen</i></a><a th:href="@{/surah/69}" class="list-group-item"> <span class="badge">69</span> Al-Haaqqa<br><i> The Reality</i></a><a th:href="@{/surah/70}" class="list-group-item"> <span class="badge">70</span> Al-Ma'aarij<br><i> The Ascending Stairways</i></a><a th:href="@{/surah/71}" class="list-group-item"> <span class="badge">71</span> Nooh<br><i> Noah</i></a><a th:href="@{/surah/72}" class="list-group-item"> <span class="badge">72</span> Al-Jinn<br><i> The Jinn</i></a><a th:href="@{/surah/73}" class="list-group-item"> <span class="badge">73</span> Al-Muzzammil<br><i> The Enshrouded One</i></a><a th:href="@{/surah/74}" class="list-group-item"> <span class="badge">74</span> Al-Muddaththir<br><i> The Cloaked One</i></a><a th:href="@{/surah/75}" class="list-group-item"> <span class="badge">75</span> Al-Qiyaama<br><i> The Resurrection</i></a><a th:href="@{/surah/76}" class="list-group-item"> <span class="badge">76</span> Al-Insaan<br><i> Man</i></a><a th:href="@{/surah/77}" class="list-group-item"> <span class="badge">77</span> Al-Mursalaat<br><i> The Emissaries</i></a><a th:href="@{/surah/78}" class="list-group-item"> <span class="badge">78</span> An-Naba<br><i> The Announcement</i></a><a th:href="@{/surah/79}" class="list-group-item"> <span class="badge">79</span> An-Naazi'aat<br><i> Those who drag forth</i></a><a th:href="@{/surah/80}" class="list-group-item"> <span class="badge">80</span> Abasa<br><i> He frowned</i></a><a th:href="@{/surah/81}" class="list-group-item"> <span class="badge">81</span> At-Takwir<br><i> The Overthrowing</i></a><a th:href="@{/surah/82}" class="list-group-item"> <span class="badge">82</span> Al-Infitaar<br><i> The Cleaving</i></a><a th:href="@{/surah/83}" class="list-group-item"> <span class="badge">83</span> Al-Mutaffifin<br><i> Defrauding</i></a><a th:href="@{/surah/84}" class="list-group-item"> <span class="badge">84</span> Al-Inshiqaaq<br><i> The Splitting Open</i></a><a th:href="@{/surah/85}" class="list-group-item"> <span class="badge">85</span> Al-Burooj<br><i> The Constellations</i></a><a th:href="@{/surah/86}" class="list-group-item"> <span class="badge">86</span> At-Taariq<br><i> The Morning Star</i></a><a th:href="@{/surah/87}" class="list-group-item"> <span class="badge">87</span> Al-A'laa<br><i> The Most High</i></a><a th:href="@{/surah/88}" class="list-group-item"> <span class="badge">88</span> Al-Ghaashiya<br><i> The Overwhelming</i></a><a th:href="@{/surah/89}" class="list-group-item"> <span class="badge">89</span> Al-Fajr<br><i> The Dawn</i></a><a th:href="@{/surah/90}" class="list-group-item"> <span class="badge">90</span> Al-Balad<br><i> The City</i></a><a th:href="@{/surah/91}" class="list-group-item"> <span class="badge">91</span> Ash-Shams<br><i> The Sun</i></a><a th:href="@{/surah/92}" class="list-group-item"> <span class="badge">92</span> Al-Lail<br><i> The Night</i></a><a th:href="@{/surah/93}" class="list-group-item"> <span class="badge">93</span> Ad-Dhuhaa<br><i> The Morning Hours</i></a><a th:href="@{/surah/94}" class="list-group-item"> <span class="badge">94</span> Ash-Sharh<br><i> The Consolation</i></a><a th:href="@{/surah/95}" class="list-group-item"> <span class="badge">95</span> At-Tin<br><i> The Fig</i></a><a th:href="@{/surah/96}" class="list-group-item"> <span class="badge">96</span> Al-Alaq<br><i> The Clot</i></a><a th:href="@{/surah/97}" class="list-group-item"> <span class="badge">97</span> Al-Qadr<br><i> The Power, Fate</i></a><a th:href="@{/surah/98}" class="list-group-item"> <span class="badge">98</span> Al-Bayyina<br><i> The Evidence</i></a><a th:href="@{/surah/99}" class="list-group-item"> <span class="badge">99</span> Az-Zalzala<br><i> The Earthquake</i></a><a th:href="@{/surah/100}" class="list-group-item"> <span class="badge">100</span> Al-Aadiyaat<br><i> The Chargers</i></a><a th:href="@{/surah/101}" class="list-group-item"> <span class="badge">101</span> Al-Qaari'a<br><i> The Calamity</i></a><a th:href="@{/surah/102}" class="list-group-item"> <span class="badge">102</span> At-Takaathur<br><i> Competition</i></a><a th:href="@{/surah/103}" class="list-group-item"> <span class="badge">103</span> Al-Asr<br><i> The Declining Day, Epoch</i></a><a th:href="@{/surah/104}" class="list-group-item"> <span class="badge">104</span> Al-Humaza<br><i> The Traducer</i></a><a th:href="@{/surah/105}" class="list-group-item"> <span class="badge">105</span> Al-Fil<br><i> The Elephant</i></a><a th:href="@{/surah/106}" class="list-group-item"> <span class="badge">106</span> Quraish<br><i> Quraysh</i></a><a th:href="@{/surah/107}" class="list-group-item"> <span class="badge">107</span> Al-Maa'un<br><i> Almsgiving</i></a><a th:href="@{/surah/108}" class="list-group-item"> <span class="badge">108</span> Al-Kawthar<br><i> Abundance</i></a><a th:href="@{/surah/109}" class="list-group-item"> <span class="badge">109</span> Al-Kaafiroon<br><i> The Disbelievers</i></a><a th:href="@{/surah/110}" class="list-group-item"> <span class="badge">110</span> An-Nasr<br><i> Divine Support</i></a><a th:href="@{/surah/111}" class="list-group-item"> <span class="badge">111</span> Al-Masad<br><i> The Palm Fibre</i></a><a th:href="@{/surah/112}" class="list-group-item"> <span class="badge">112</span> Al-Ikhlaas<br><i> Sincerity</i></a><a th:href="@{/surah/113}" class="list-group-item"> <span class="badge">113</span> Al-Falaq<br><i> The Dawn</i></a><a th:href="@{/surah/114}" class="list-group-item"> <span class="badge">114</span> An-Naas<br><i> Mankind</i></a>
+            </ul>
+        </div>
+
+
+        <div class="col-lg-8 mt-5">
+            <h2>Search for Surah</h2>
+            <hr>
+            <input class="form-control" id="myInput" type="text" placeholder="Enter Surah number or name">
+
+
+        </div>
+
+    </div>
+
+
+
+</div>
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myList a").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+</body>
+</html>

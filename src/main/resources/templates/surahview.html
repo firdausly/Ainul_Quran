@@ -1,0 +1,145 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8">
+    <title>Surah View</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+
+    <style>
+    @font-face {
+  font-family: 'KFGQPC Uthman Taha Naskh Regular';
+  src: url('../KFGQPC Uthman Taha Naskh Regular.ttf');
+}
+        body{
+        background: hsl(150,85%,97%);
+        }
+
+        .single-word {
+        font-family: KFGQPC Uthman Taha Naskh Regular;
+        text-align: center;
+        margin: 0 8px;
+        float:right;
+        }
+        .arabic-text {
+        font-size: 50px;
+        }
+        .single-word:hover {
+        color: hsl(360,85%,76%);
+        cursor: pointer;
+        }
+        .word-transliteration {
+        padding-top: 10px;
+        padding-bottom: 2px;
+        }
+        .single-ayat {
+        clear: both;
+        float: right;
+        }
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand " th:href="@{/}">Ainul-Quran</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarcollapsee" aria-controls="navbarcollapsee" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="text-white">Menu</span>
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarcollapsee">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link " th:href="@{/vocab}">View Vocabulary</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/search}">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " th:href="@{/logout}">Log out</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/profile}">Welcome <span sec:authentication="name"></span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+
+<div class="container mt-5">
+    <h2>Surah <span class="single-word">﴾ <th:block th:text="${surahName}"></th:block>﴿ </span></h2>
+
+    <th:block th:each="sura: ${Surah}">
+        <span class="single-ayat w-100 p-3 mb-5">
+
+        <th:block th:each="word: ${sura.value}">
+            <span  class="single-word">
+            <span data-toggle="popover" class="arabic-text" th:text="${word.ayat}" /><br>
+            <span th:text="${word.translation_eng}" /><br>
+                <span th:text="${word.translation_bahasa}" /><br>
+            <span th:text="${word.trannsliteration}" />
+            </span>
+        </th:block>
+        <span class="single-ayat " th:utext="${sura.key}" />
+
+        </span>
+    </th:block>
+
+
+</div>
+
+
+<div id="popover-content" style="display: none">
+    <!-- Hidden div with the popover content -->
+    <p>This is the popover content</p>
+</div>
+
+
+
+<!-- script load !-->
+<script src="/webjars/jquery/jquery.min.js" ></script>
+<script src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+
+$(document).ready(function(){
+$('.arabic-text').click(function(e) {
+  arabicword = $(e.target).text();
+
+  var contentHtml ='<a href="/vocab/'+encodeURI(arabicword)+'"  class="btn btn-success">Save Word to Vocab</a>';
+
+  $('#popover-content').html(contentHtml);
+
+  $('[data-toggle="popover"]').popover({
+  html: true,
+  content: function() { return $('#popover-content').html(); },
+  placement: 'top',
+  });
+
+
+
+$('html').on('click', function(e) {
+  if (typeof $(e.target).data('original-title') == 'undefined' &&
+     !$(e.target).parents().is('.popover.in')) {
+    $('[data-original-title]').popover('hide');
+  }
+});
+
+});
+
+
+
+
+
+
+});
+
+</script>
+
+</body>
+</html>
