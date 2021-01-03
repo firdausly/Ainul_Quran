@@ -14,5 +14,9 @@ public interface UserVocab extends JpaRepository<user_vocab,Long > {
 
     user_vocab findByUsernameAndVocab(String username,String vocab);
 
+    void deleteByUsernameAndVocab(String username,String vocab);
+
+    void deleteByUsername(String username);
+
 
 }

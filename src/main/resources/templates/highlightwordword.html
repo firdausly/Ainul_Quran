@@ -20,7 +20,7 @@
     }
 
     .highlighted {
-    color:lime;
+    background-color:lime;
     }
 </style>
 </head>
@@ -89,7 +89,20 @@
     </div>
 
 </div>
+<script src="/webjars/jquery/jquery.min.js" ></script>
+<script th:inline="javascript">
+    var data = [[${highlightcss}]];
+    var word = [[${word}]];
+
+data.forEach(myFunction);
+
+function myFunction(item, index) {
+  var choosen="#"+item;
+  $(choosen).addClass("highlighted");
+  $(choosen).html(word);
+}
 
 
+</script>
 </body>
 </html>

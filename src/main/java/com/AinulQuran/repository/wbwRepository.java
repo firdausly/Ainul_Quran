@@ -17,4 +17,6 @@ public interface wbwRepository extends JpaRepository<wbw, Integer > {
     Long countBychapterAndWordarabic(int chapter,String wordarabic);
 
     Long countBychapter(int chapter);
+
+    Long countByWordarabic(String wordarabic);
 }

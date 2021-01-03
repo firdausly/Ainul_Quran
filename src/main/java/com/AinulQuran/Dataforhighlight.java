@@ -28,4 +28,28 @@ public class Dataforhighlight {
     public void setWord(ArrayList<String> word) {
         this.word = word;
     }
+
+    public String wordtoString(ArrayList<String> list){
+        String generatedlist="";
+        for(int i=0;i<list.size();i++){
+            if(i==list.size()-1){
+                generatedlist+="\""+list.get(i)+"\"";
+            }
+            else {
+                generatedlist+="\""+list.get(i)+"\",";
+            }
+
+
+        }
+
+        return generatedlist;
+    }
+    @Override
+    public String toString() {
+        return "new Dataforhighlight(" +
+                surano +
+                ", new ArrayList<>(Arrays.asList("+ wordtoString(word) +
+                ")))";
+    }
+
 }

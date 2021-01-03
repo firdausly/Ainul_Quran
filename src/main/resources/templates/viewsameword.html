@@ -52,7 +52,9 @@
         </div>
 
         <div class="col-lg-10">
+            <h2 th:inline="text">Total Occurence for [[${word}]] is [[${wordselected.size()}]] which occured in [[${countsurahoccured}]] Surah</h2>
             <div id="chart_div" style="width: 66vw; height: 50vh;"></div>
+           <a th:href="@{/highlight/{word}(word=${word})}" class="btn btn-success">Highlight</a>
             <table id="example" class="table table-hover table-striped" style="width:100% !important">
                 <thead>
                 <tr>
@@ -76,6 +78,17 @@
                 </tr>
                 </tbody>
             </table>
+
+            <div>
+                <h2 th:inline="text">Total Percentage of Quran Completion for [[${word}]] is  </h2>
+                <h2 th:inline="text">[[${totalpercentagelearned}]]</h2>
+
+                <h2 th:inline="text">Percentage of [[${word}]] occurence by Chapter </h2>
+                <th:block th:each="dataforpercentage: ${dataforpercentage}">
+                    <p th:text="${dataforpercentage}"></p>
+                </th:block>
+
+            </div>
 
 
         </div>

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Ainul Quran</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
     <script src="/webjars/jquery/jquery.min.js" ></script>
     <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
@@ -40,35 +41,54 @@
     </div>
 </nav>
 
-<div class="container">
-    <h2>Administrator Dashboard</h2>
+<div class="container ml-0 pl-0">
 
-    <div class="row">
-        <div class="col-lg-8 border border-left-0 border-top-0 border-bottom-0">
+    <div class="row ml-0 pl-0">
+        <div class="col-lg-3 ml-0 pl-0 pr-0 shadow bg-light" style="height:90vh">
+            <div class="list-group list-group-flush">
+                <a th:href="@{/admin}" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+
+
+                <a href="#profilesetting" data-toggle="collapse" class="list-group-item list-group-item-action bg-light">
+                    Profile Setting
+                    <i class="fa fa-chevron-down " style="float:right" aria-hidden="true"></i>
+
+                </a>
+<!--                submenu item-->
+                <div id="profilesetting" class="collapse">
+                    <a th:href="@{/changepass}" class="list-group-item list-group-item-action bg-light pl-5">Change Password</a>
+                </div>
+
+                <a href="#manageuser" data-toggle="collapse" class="list-group-item list-group-item-action bg-light">
+                    Manage User
+                    <i class="fa fa-chevron-down " style="float:right" aria-hidden="true"></i>
+
+                </a>
+                <!--                submenu item-->
+                <div id="manageuser" class="collapse">
+                    <a th:href="@{/admin/listUser}" class="list-group-item list-group-item-action bg-light pl-5">List/Delete/Edit User</a>
+                    <a th:href="@{/admin/addUser}" class="list-group-item list-group-item-action bg-light pl-5">Add New User</a>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-9 border border-left-0 border-top-0 border-bottom-0">
             <ul class="list-group">
                 <li class="list-group-item" ><h5>Total User Registered</h5> <p th:text="${UserInfo}"></p></li>
                 <li class="list-group-item" >
                     <h3>Manage Surah </h3>
                     <a th:href="@{/edit}" class="btn btn-success">Edit Surah</a>
                 </li>
-                <li class="list-group-item" >
-                    <h3>Manage User </h3>
-                    <a th:href="@{/listUser}" class="btn btn-primary">List User</a>
-                    <a th:href="@{/addUser}" class="btn btn-primary">Add/Delete User</a>
-                    <a th:href="@{/editUserDetail}" class="btn btn-primary">Edit User Detail</a>
-                    <a th:href="@{/editUserStatus}" class="btn btn-primary">Edit User Status (Free,Paid)</a>
 
-                </li>
 
             </ul>
         </div>
-        <div class="col-lg-4">
-            <h3>Edit Profile: </h3>
-            <a th:href="@{/edit}" class="btn btn-success">Edit Profile</a>
-            <hr>
-            <h3>Change Password: </h3>
-            <a th:href="@{/changepass}" class="btn btn-success">Change Password</a>
-        </div>
+
     </div>
 
 

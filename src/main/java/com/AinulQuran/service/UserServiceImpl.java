@@ -4,6 +4,7 @@ package com.AinulQuran.service;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.AinulQuran.model.Role;
@@ -40,10 +41,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
+
+
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
+    @Override
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
 
 
     public User save(UserRegistrationDto registration) {
@@ -54,6 +61,11 @@ public class UserServiceImpl implements UserService {
         user.setEmail(registration.getEmail());
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
         user.setRoles(Arrays.asList(new Role("ROLE_USER")));
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User normalSave(User user) {
         return userRepository.save(user);
     }
 

@@ -75,145 +75,103 @@
 
         </div>
         <div class="col-lg-9 border border-left-0 border-top-0 border-bottom-0">
-            <h2>List of User</h2>
+            <div th:if="${param.success}">
+                <div class="alert alert-info">successfully edited user details</div>
+            </div>
+            <form th:action="@{/admin/saveUserDetail}" th:object="${userDetail}" method="post">
 
-            <table id="example" class="table" style="width:100% !important">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
-                    <th>E-mail</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="user : ${UserInfo}">
-                    <td th:text="${user.id}"></td>
-                    <td th:text="${user.firstName}"></td>
-                    <td th:text="${user.lastName}"></td>
-                    <td th:text="${user.username}"></td>
-                    <td th:text="${user.email}"></td>
-                    <td>
-                        <button type="button" th:id="${user.username}"  onClick="confirmDelete(this.id)" class="btn btn-danger">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    <td>
-
-                        <button type="button" th:id="${user.email}"  onClick="edit(this.id)" class="btn btn-primary">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-
-                        </button>
-
-                    </td>
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-
-
-
-
-        </div>
-
-
-
-
-
-</div>
-    <div id="deleteModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-body" style="text-align:center">
-                    <i class="fa fa-exclamation-triangle fa-5x" aria-hidden="true"></i>
-
-                    <div>Are you sure you want to delete <span id="wordselected"></span> from user list ?</div>
-                    <hr>
-                    <a class="btn btn-danger" id="removelink">Yes</a>
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+                <div class="form-group">
+                    <label for="firstName" class="control-label">Id</label>
+                    <input id="id" class="form-control" th:field="*{id}" readonly="readonly" />
 
                 </div>
 
-            </div>
 
+                <div class="form-group">
+                    <label for="firstName" class="control-label">First name</label> <input
+                        id="firstName" class="form-control" th:field="*{firstName}" />
+
+                </div>
+                <div class="form-group">
+                    <label for="lastName" class="control-label">Last name</label> <input
+                        id="lastName" class="form-control" th:field="*{lastName}" />
+
+                </div>
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('email')}? 'has-error':''">
+                    <label for="username" class="control-label">Username</label> <input
+                        id="username" class="form-control" th:field="*{username}" />
+
+                </div>
+                <div class="form-group">
+                    <label for="email" class="control-label">E-mail</label> <input
+                        id="email" class="form-control" th:field="*{email}" />
+
+                </div>
+                <label for="form-check" class="control-label">roles</label>
+                <div class="form-check" id="form-check">
+
+
+                    <input type="checkbox" class="form-check-input" id="ROLE_USER" value="ROLE_USER" th:field="*{roles}">
+                    <label class="form-check-label" for="ROLE_USER">USER</label>
+                     <br>
+                    <input type="checkbox" class="form-check-input" id="ROLE_ADMIN" value="ROLE_ADMIN" th:field="*{roles}">
+                    <label class="form-check-label" for="ROLE_ADMIN">ADMIN</label>
+
+
+                    <p></p>
+
+                </div>
+
+
+
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Edit</button>
+                </div>
+
+            </form>
         </div>
     </div>
 </div>
+
 <script src="/webjars/jquery/jquery.min.js" ></script>
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-<script>
+<script type="text/javascript" th:inline="javascript">
+
+var roles=[[${userDetail.roles}]];
+console.log(roles);
+
+roles.forEach(function (e){
+
+    if (e.name == ("ROLE_USER")) {
+    $("#ROLE_USER").prop('checked', true);
+    }
+
+    if (e.name == ("ROLE_ADMIN")) {
+    $("#ROLE_ADMIN").prop('checked', true);
+    }
+});
+
+
 $(document).ready(function() {
     $('#example').DataTable();
+
 });
 
     function confirmDelete(id) {
     $("#wordselected").html(id);
-    $("#removelink").attr("href", "/admin/removeUser/"+id);
+    $("#removelink").attr("href", "/removeUser/"+id);
     $("#deleteModal").modal();
 
     }
 
     function edit(id) {
-    location.href="/admin/editUserDetail/"+id;
+    location.href="/editUserDetail/"+id;
     }
 
+
 </script>
-<th:block th:if="${errorMessage}">
-    <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div th:text="${errorMessage}"></div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <a href="javascript:history.back()" class="btn btn-default" >Back</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-
-    <script>
-      $("#myModal").modal();
-  </script>
-</th:block>
-
-<th:block th:if="${successMessage}">
-    <div id="successmodal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div th:text="${successMessage}"></div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <a href="javascript:history.back()" class="btn btn-default" >Back</a>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-    <script>
-      $("#successmodal").modal();
-  </script>
-
-</th:block>
-
 </body>
 </html>

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Ainul Quran</title>
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="/webjars/jquery/jquery.min.js" ></script>
     <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 
@@ -41,7 +42,7 @@
 </nav>
 <th:block th:if="${errorMessage}">
     <div id="myModal" class="modal fade" role="dialog">
-
+        <div class="modal-dialog">
 
             <!-- Modal content-->
             <div class="modal-content">
@@ -55,12 +56,37 @@
                 </div>
             </div>
 
-
+        </div>
     </div>
 
 
   <script>
       $("#myModal").modal();
+  </script>
+</th:block>
+
+    <th:block th:if="${successMessage}">
+        <div id="successmodal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div th:text="${successMessage}"></div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <a href="javascript:history.back()" class="btn btn-default" >Back</a>
+                </div>
+            </div>
+            </div>
+
+        </div>
+
+
+        <script>
+      $("#successmodal").modal();
   </script>
 
 </th:block>
@@ -70,19 +96,72 @@
 <div class="container mt-5">
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-2">
             <h2>Your Saved Vocabulary: </h2>
             <div class="list-group">
                 <th:block th:each="list: ${wbw}">
-                    <a th:href="@{/vocab/viewword/{word}(word=${list.vocab})}" class="list-group-item" th:text="${list.vocab}"></a>
 
+                    <div class="list-group-item">
+                        <button type="button" th:id="${list.vocab}" onClick="confirmDelete(this.id)" class="btn btn-danger">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+
+                        </button>
+
+                        <a th:href="@{/vocab/viewword/{word}(word=${list.vocab})}"  th:text="${list.vocab}">
+                        </a>
+
+
+                        </div>
                 </th:block>
 
             </div>
+
+        </div>
+        <div class="col-lg-10">
+            <h2 th:inline="text">Total Percentage of Quran Completion based on your saved Vocabulary is  </h2>
+            <h2 th:inline="text">[[${totalpercentage}]] %
+                <button data-toggle="collapse"  class="btn btn-outline-primary fa fa-info-circle" data-target="#percentageInfo"></button>
+
+            </h2>
+
+            <div id="percentageInfo" class="collapse">
+                Calculation of the percentage is done by calculating the frequency of all your saved word divided by the total word in the Quran
+            </div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" th:style="'width:' + ${totalpercentage} + '%'" th:aria-valuenow="${totalpercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
         </div>
 
-
     </div>
+    <div id="deleteModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body" style="text-align:center">
+                    <i class="fa fa-exclamation-triangle fa-5x" aria-hidden="true"></i>
+
+                    <div>Are you sure you want to delete <span id="wordselected"></span> from your vocabulary list?</div>
+                   <hr>
+                    <a class="btn btn-danger" id="removelink">Yes</a>
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <script>
+    function confirmDelete(id) {
+    $("#wordselected").html(id);
+    $("#removelink").attr("href", "/remove/"+id);
+    $("#deleteModal").modal();
+
+
+    }
+
+</script>
 </div>
 </body>
 </html>
