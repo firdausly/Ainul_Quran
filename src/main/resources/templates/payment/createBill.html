@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ainul Quran</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="/webjars/jquery/jquery.min.js" ></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body class="bg-light">
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
+<div class="container">
+
+    <div class="container">
+
+
+    <form th:action="@{/payment/sendBill}" th:object="${createBill}" method="post">
+
+        <div class="form-group">
+            <label for="billName" class="control-label">Bill Name</label>
+            <input id="billName" class="form-control" th:field="*{billName}" readonly  />
+
+
+        </div>
+
+
+        <div class="form-group">
+            <label for="billDescription" class="control-label">Bill Description</label> <input
+                id="billDescription" class="form-control" th:field="*{billDescription}" readonly />
+
+
+        </div>
+        <div class="form-group">
+            <label for="billTo" class="control-label">Bill To: </label> <input
+                id="billTo" class="form-control" th:field="*{billTo}" />
+            <p class="error-message"
+               th:each="error: ${#fields.errors('billTo')}"
+               th:text="${error}">Validation error</p>
+
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="control-label">Email</label> <input
+                id="email" class="form-control" th:field="*{billEmail}" />
+            <p class="error-message"
+               th:each="error: ${#fields.errors('billEmail')}"
+               th:text="${error}">Validation error</p>
+
+        </div>
+        <div class="form-group">
+            <label for="phone" class="control-label">Phone</label> <input
+                id="phone" class="form-control" th:field="*{billPhone}" />
+            <p class="error-message"
+               th:each="error: ${#fields.errors('billPhone')}"
+               th:text="${error}">Validation error</p>
+
+        </div>
+
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+
+    </form>
+
+
+<th:block th:if="${billDetails}">
+    <div class="jumbotron text-center ">
+        <p class="display-4 lead"th:inline="text">Surah [[${surahDetail.namearb}]] - [[${surahDetail.nameroman}]]</p>
+        <div class="d-flex justify-content-between">
+            <button id="leftarrow" aria-hidden="true" class="btn fa fa-arrow-left fa-4x"></button>
+            <button id="rightarrow" aria-hidden="true" class="btn fa fa-arrow-right fa-4x "></button>
+        </div>
+
+        <i class="lead " th:inline="text"> [[${surahDetail.nameeng}]]</i>
+        <p class="lead" th:inline="text">Type: [[${surahDetail.surahtype}]] Count: [[${surahDetail.ayacount}]]</p>
+    </div>
+</th:block>
+
+</div>
+</div>
+</body>
+</html>

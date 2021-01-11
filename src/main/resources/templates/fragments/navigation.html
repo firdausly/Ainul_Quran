@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark" id="mainNav">
+    <div class="container">
+        <a  class="navbar-brand mr-auto " th:href="@{/}">Ainul-Quran</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarcollapsee" aria-controls="navbarcollapsee" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="text-white">Menu</span>
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarcollapsee">
+
+            <ul sec:authorize="isAuthenticated()" class="navbar-nav mx-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link " th:href="@{/vocab}">View Vocabulary <i class="fa fa-book" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/search}">Search <i class="fa fa-search" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " th:href="@{/logout}"><i class="fa fa-sign-out" aria-hidden="true"></i>
+                        Log out</a>
+                </li>
+            </ul>
+
+
+            <ul sec:authorize="!isAuthenticated()" class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link " th:href="@{/#about}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link  " th:href="@{/login}">Log in</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " th:href="@{/register}">Sign-up</a>
+                </li>
+            </ul>
+
+            <ul sec:authorize="isAuthenticated()" class="navbar-nav ml-auto">
+                <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
+                    <a class="nav-link " th:href="@{/admin}"> <i class="fa fa-wrench" aria-hidden="true"></i> Admin Panel
+                    </a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_USER')" class="nav-item">
+                    <a class="nav-link " th:href="@{/payment/createBill}"> <i class="fa fa-wrench" aria-hidden="true"></i> Upgrade Account
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " th:href="@{/profile}">Welcome <span sec:authentication="name"></span></a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+
+
+
+</body>
+</html>

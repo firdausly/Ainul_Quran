@@ -11,21 +11,19 @@
 
 </head>
 <body class="bg-light">
-<div class="modal-dialog">
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
 
-    <!-- Modal content-->
-    <div class="modal-content">
-        <div class="modal-body" style="text-align:center">
-            <i class="fa fa-exclamation-triangle fa-5x" aria-hidden="true"></i>
+<div class="container">
 
-            <div>Opps!.. something has gone wrong.. The page could not be found!</div>
-            <hr>
-            <a href="javascript:history.back()" class="btn btn-primary">Back</a>
-
-
-        </div>
+    <div>
+        <ul th:each="test: ${similar}">
+            <li th:text="${test}"></li>
+        </ul>
 
     </div>
+
 </div>
+
+
 </body>
 </html>

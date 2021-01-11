@@ -10,70 +10,18 @@
 
 
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" id="mainNav">
-    <div class="container">
-        <a class="navbar-brand " th:href="@{/}">Ainul-Quran</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarcollapsee" aria-controls="navbarcollapsee" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="text-white">Menu</span>
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarcollapsee">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link " th:href="@{/vocab}">View Vocabulary</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/search}">Search</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " th:href="@{/logout}">Log out</a>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/profile}">Welcome <span sec:authentication="name"></span></a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="container pl-0 ml-0">
-
-    <div class="row ml-0 pl-0">
-        <div class="col-lg-3 ml-0 pl-0 pr-0 shadow bg-light" style="height:90vh">
-            <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action bg-light">Dashboard</a>
-
-
-                <a href="#profilesetting" data-toggle="collapse" class="list-group-item list-group-item-action bg-light">
-                    Profile Setting
-                    <i class="fa fa-chevron-down " style="float:right" aria-hidden="true"></i>
-
-                </a>
-                <!--                submenu item-->
-                <div id="profilesetting" class="collapse">
-                    <a th:href="@{/changepass}" class="list-group-item list-group-item-action bg-light pl-5">Change Password</a>
-                </div>
-
-                <a href="#manageuser" data-toggle="collapse" class="list-group-item list-group-item-action bg-light">
-                    Manage User
-                    <i class="fa fa-chevron-down " style="float:right" aria-hidden="true"></i>
-
-                </a>
-                <!--                submenu item-->
-                <div id="manageuser">
-                    <a th:href="@{/admin/listUser}" class="list-group-item list-group-item-action activebg-light pl-5">List/Delete/Edit User</a>
-                    <a th:href="@{/admin/addUser}" class="list-group-item list-group-item-action bg-light pl-5">Add User</a>
-                </div>
+<body class="bg-light">
+<style>
+    html,body {
+  height: 100%;
+}
+</style>
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
 
 
 
-            </div>
-
-        </div>
+    <div class="row ml-0 pl-0 mr-0 h-100">
+        <th:block th:insert="fragments/sidebarAdmin.html :: #sidebarAdmin"></th:block>
         <div class="col-lg-9 border border-left-0 border-top-0 border-bottom-0">
             <div th:if="${param.success}">
                 <div class="alert alert-info">successfully edited user details</div>
@@ -117,6 +65,9 @@
                      <br>
                     <input type="checkbox" class="form-check-input" id="ROLE_ADMIN" value="ROLE_ADMIN" th:field="*{roles}">
                     <label class="form-check-label" for="ROLE_ADMIN">ADMIN</label>
+                    <br>
+                    <input type="checkbox" class="form-check-input" id="ROLE_PAID" value="ROLE_PAID" th:field="*{roles}">
+                    <label class="form-check-label" for="ROLE_PAID">PAID</label>
 
 
                     <p></p>
@@ -133,7 +84,7 @@
             </form>
         </div>
     </div>
-</div>
+
 
 <script src="/webjars/jquery/jquery.min.js" ></script>
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
@@ -141,7 +92,7 @@
 <script type="text/javascript" th:inline="javascript">
 
 var roles=[[${userDetail.roles}]];
-console.log(roles);
+
 
 roles.forEach(function (e){
 
@@ -151,6 +102,10 @@ roles.forEach(function (e){
 
     if (e.name == ("ROLE_ADMIN")) {
     $("#ROLE_ADMIN").prop('checked', true);
+    }
+
+     if (e.name == ("ROLE_PAID")) {
+    $("#ROLE_PAID").prop('checked', true);
     }
 });
 

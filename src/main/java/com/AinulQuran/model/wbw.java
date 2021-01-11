@@ -105,4 +105,19 @@ public class wbw {
     public void setWordtransliteration(String wordtransliteration) {
         this.wordtransliteration = wordtransliteration;
     }
+
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id:'" + id + '\'' +
+                ", chapter:'" + chapter + '\'' +
+                ", ayat:'" + ayat + '\'' +
+                ", word:'" + word + '\'' +
+                ", wordarabic:'" + wordarabic + '\'' +
+                ", wordenglish:'" + wordenglish + '\'' +
+                ", wordmalay:'" + wordmalay + '\'' +
+                ", wordtransliteration:'" + wordtransliteration + '\'' +
+                '}';
+    }
 }

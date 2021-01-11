@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Ainul Quran</title>
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
 <style>
     .border {
@@ -24,36 +25,8 @@
     }
 </style>
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" id="mainNav">
-    <div class="container">
-        <a class="navbar-brand " th:href="@{/}">Ainul-Quran</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarcollapsee" aria-controls="navbarcollapsee" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="text-white">Menu</span>
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarcollapsee">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active " th:href="@{/vocab}">View Vocabulary</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/search}">Search</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " th:href="@{/logout}">Log out</a>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/profile}">Welcome <span sec:authentication="name"></span></a>
-                </li>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<body class="bg-light">>
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
 <div class="container">
 
     <div>
@@ -67,12 +40,12 @@
             <tbody>
             <th:block th:each="list: ${test}">
                 <tr>
-                    <td th:text="${list.surano}"></td>
+                    <td id="surano" th:text="${list.surano}"></td>
                     <td><table>
                         <tr style="display:flex;flex-flow:wrap">
                         <th:block th:each="listofword: ${list.word}">
 
-                        <td><span th:id="${listofword}" class="border" width="100px"></span></td>
+                        <td><a href="#" th:id="${listofword}" onclick="highlight(this.id);" class="border" width="100px"></a></td>
                     </th:block>
 
                     </tr></table></td>
@@ -101,6 +74,16 @@ function myFunction(item, index) {
   $(choosen).addClass("highlighted");
   $(choosen).html(word);
 }
+
+function highlight(id) {
+
+     var n = id.indexOf("a");
+     var surano = id.substr(1,n-1);
+     var url="/surah/"+surano+"#"+id;
+     location.href = url;
+
+}
+
 
 
 </script>

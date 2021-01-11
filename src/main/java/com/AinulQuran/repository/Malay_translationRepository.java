@@ -15,5 +15,7 @@ public interface Malay_translationRepository extends JpaRepository <Malay_transl
     List<Malay_translation> findBySura(int Sura);
     List<Malay_translation> findAll();
 
+    int countBySura (int surah);
+
 
 }

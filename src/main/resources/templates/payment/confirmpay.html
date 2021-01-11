@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ainul Quran</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="/webjars/jquery/jquery.min.js" ></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body class="bg-light">
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
+<div class="container">
+
+    <div class="jumbotron text-center ">
+        <th:block th:if="${billDetails}">
+        <p class="lead" th:inline="text">Bill Name - [[${billDetails.billName}]]</p>
+        <p class="lead"  th:inline="text">Bill Amount - [[${billDetails.billAmount}]]</p>
+        <p class="lead"  th:inline="text">Bill To - [[${billDetails.billTo}]]</p>
+        <p class="lead"  th:inline="text">Email - [[${billDetails.billEmail}]]</p>
+        <p class="lead"  th:inline="text">Phone - [[${billDetails.billPhone}]]</p>
+        </th:block>
+
+        <p class="lead display-4" th:if="${alreadyhasBillCode}">You already had Pending transaction! </p>
+        <p class="lead" th:if="${alreadyhasBillCode}">Pay Now to unlock full access </p>
+
+        <p class="lead display-4" th:if="${alreadysuccess}"> Successfully paid </p>
+        <p class="lead" th:if="${alreadysuccess}"> payment received</p>
+
+
+        <a class="btn btn-success" th:unless="${alreadysuccess}" th:href="@{https://dev.toyyibpay.com/{billCode}(billCode=${billCode})}">Pay</a>
+    </div>
+
+
+
+</div>
+</div>
+</body>
+</html>

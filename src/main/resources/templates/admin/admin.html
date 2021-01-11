@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ainul Quran</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <script src="/webjars/jquery/jquery.min.js" ></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body class="bg-light">>
+<style>
+    html,body {
+  height: 100%;
+}
+</style>
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
+
+
+    <div class="row ml-0 mr-0 pl-0 h-100">
+        <th:block th:insert="fragments/sidebarAdmin.html :: #sidebarAdmin"></th:block>
+        <div class="col-lg-9 border border-left-0 border-top-0 border-bottom-0">
+            <div class="d-flex flex-row justify-content-start">
+                <div class="p-4 m-3 btn btn-success">
+                    <div class="row">
+                        <div class="">
+                            <i aria-hidden="true" class="fa fa-users fa-4x"></i>
+                        </div>
+                        <div class="col-7">
+                            <p class="font-weight-light">Total Users
+
+                                <i style="font-size:1.5rem" th:text="${UserInfo}"></i>
+                            </p></div>
+                    </div>
+
+
+                </div>
+
+                <div class="p-5 m-3 btn btn-secondary">Flex item 2</div>
+                <div class="p-5 m-3 btn btn-primary">Flex item 3</div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

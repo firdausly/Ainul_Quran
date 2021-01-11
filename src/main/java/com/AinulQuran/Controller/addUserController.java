@@ -29,7 +29,7 @@ public class addUserController {
 
     @GetMapping
     public String showRegistrationForm(Model model) {
-        return "addUser";
+        return "admin/addUser";
     }
 
     @PostMapping
@@ -47,7 +47,7 @@ public class addUserController {
         }
 
         if (result.hasErrors()) {
-            return "addUser";
+            return "admin/addUser";
         }
 
         userService.save(userDto);

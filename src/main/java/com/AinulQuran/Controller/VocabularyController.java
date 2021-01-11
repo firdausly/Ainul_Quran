@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Dictionary;
 import java.util.List;
 
@@ -104,7 +105,6 @@ public class VocabularyController {
         long count=0;
         for(int i=0;i<listuservocabulary.size();i++){
             String arabicwordvocabulary=listuservocabulary.get(i).getVocab();
-            dictionary wordp=dictionaryrepo.findBywordp(arabicwordvocabulary);
 
             //count matching saved word frequency and add it to count var
             count+=wbwrepo.countByWordarabic(arabicwordvocabulary);
@@ -115,6 +115,10 @@ public class VocabularyController {
 
         //total frequency of all saved word / total word count in the whole quran
         double totalPercentageLearned=(double)count/(double)totalWord*100;
+
+        ArrayList<String> percentagePerSurah=new ArrayList<>();
+
+        
 
         String totalPercentageLearnedString=String.format("%.4f",totalPercentageLearned)+"";
         model.addAttribute("totalpercentage",totalPercentageLearnedString);
@@ -200,6 +204,57 @@ public class VocabularyController {
 
 
         return percentage;
+    }
+
+    @GetMapping("/vocab/predict/{surah1}/{surah2}")
+    public String predict(Model model,@PathVariable("surah1") int surah1
+            ,@PathVariable("surah2") int surah2){
+
+        Collection<wbw> wordSurah1=wbwrepo.findBychapter(surah1);
+        Collection<wbw> wordSurah2=wbwrepo.findBychapter(surah2);
+
+        ArrayList<String> listword1=new ArrayList();
+        ArrayList<String> listword2=new ArrayList();
+
+        for (wbw wbw: wordSurah1
+             ) {
+            listword1.add(wbw.getWordarabic());
+        }
+
+        for (wbw wbw: wordSurah2
+        ) {
+            listword2.add(wbw.getWordarabic());
+        }
+
+
+        Collection listOne=listword1;
+        Collection listTwo=listword2;
+
+        int count=0;
+        System.out.println(listOne);
+        System.out.println(listTwo);
+
+        //find similar word and list out
+        listOne.retainAll(listTwo);
+
+        int countinOne=0;
+        int countinTwo=0;
+
+        for (Object wordarabic:listOne
+             ) {
+            String word=wordarabic.toString();
+            countinOne+=wbwrepo.countBychapterAndWordarabic(surah1,word);
+            countinTwo+=wbwrepo.countBychapterAndWordarabic(surah2,word);
+        }
+
+
+        System.out.println(listOne);
+        System.out.println(countinOne+" - "+countinTwo);
+
+        model.addAttribute("similar",listOne);
+
+
+        return "predict";
     }
 
 }

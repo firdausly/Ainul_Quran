@@ -1,20 +1,22 @@
 package com.AinulQuran.Controller;
 
 import com.AinulQuran.model.User;
+import com.AinulQuran.model.surahindexes;
 import com.AinulQuran.model.user_vocab;
+import com.AinulQuran.model.wbw;
 import com.AinulQuran.repository.UserRepository;
 import com.AinulQuran.repository.UserVocab;
+import com.AinulQuran.repository.surahindexesrepo;
+import com.AinulQuran.repository.wbwRepository;
 import com.AinulQuran.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import org.springframework.validation.Errors;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,15 +33,111 @@ public class AdminController {
     @Autowired
     private UserVocab userVocabRepository;
 
+    @Autowired
+    private wbwRepository wbwRepository;
 
+    @Autowired
+    private surahindexesrepo surahindexesrepo;
+
+
+
+    @GetMapping("/admin")
+    public String admin(Model model ){
+
+        long totalUser=service.count();
+
+        model.addAttribute("UserInfo",totalUser);
+
+        return "admin/admin";
+    }
 
     @GetMapping("/admin/listUser")
     public String listUser(Model model){
         List<User> allUser=service.findAll();
 
         model.addAttribute("UserInfo",allUser);
-        return "listUser";
+        return "admin/listUser";
     }
+
+    @GetMapping("/admin/listWbw/{chapter}")
+    public String listWbw(@PathVariable("chapter") int chapter,Model model){
+        List<wbw> wbwList = wbwRepository.findBychapter(chapter);
+
+        if(wbwList==null){
+            return "admin/listSurah";
+        }
+
+        model.addAttribute("wbwList", wbwList);
+        model.addAttribute("chapter", chapter);
+        return "admin/listWbw";
+    }
+
+    @GetMapping("/admin/editWbwDetail/{id}")
+    public String editWbwDetail(@PathVariable("id") int id,Model model){
+        Optional<wbw> wbwList = wbwRepository.findById(id);
+
+
+        if(wbwList==null){
+            return "admin/listSurah";
+        }
+
+        model.addAttribute("wbwDetail", wbwList.get());
+        return "admin/listWbw";
+    }
+
+    @PostMapping("/admin/saveWbw")
+    public String saveWbw(Model model,@ModelAttribute("wbwDetail") wbw wbw) {
+
+
+        if(wbwRepository.findById(wbw.getId())==null){
+            model.addAttribute("errorMessage","Error, Cant find that Id");
+            return "/admin/listSurah";
+        }
+        wbwRepository.save(wbw);
+        model.addAttribute("id",wbw.getId());
+        return "redirect:/admin/listWbw/"+wbw.getChapter()+"?success";
+    }
+
+
+
+    @GetMapping("/admin/listSurah")
+    public String listWbw(Model model){
+        List<surahindexes> surahList= surahindexesrepo.findAll();
+
+        model.addAttribute("surahList", surahList);
+        return "admin/listSurah";
+    }
+
+    @GetMapping("/admin/editSurah/{surano}")
+    public String editSurah(@PathVariable("surano") int surano,Model model){
+
+
+        surahindexes currentSurah = surahindexesrepo.findBysurano(surano);
+
+        if(currentSurah==null){
+            return "redirect:/admin/listSurah";
+        }
+
+
+
+        model.addAttribute("surahDetail", currentSurah);
+        return "admin/listSurah";
+    }
+
+
+    @PostMapping("/admin/saveSurah")
+    public String saveSurah(Model model,@ModelAttribute("surahDetail") surahindexes currentSurah) {
+
+
+        if(surahindexesrepo.findBysurano(currentSurah.getSurano())==null){
+            model.addAttribute("errorMessage","Error, Cant find that surah");
+            return "/admin/listSurah";
+        }
+        surahindexesrepo.save(currentSurah);
+        return "redirect:/admin/listSurah"+"?success";
+    }
+
+
 
     @Transactional
     @GetMapping("/admin/removeUser/{username}")
@@ -52,7 +150,7 @@ public class AdminController {
         if(currentUser==null ){
             String error="The User does not exist";
             model.addAttribute("errorMessage",error);
-            return "listUser";
+            return "admin/listUser";
         }
         else {
             List<user_vocab> user_vocab=userVocabRepository.findByUsername(username);
@@ -69,7 +167,7 @@ public class AdminController {
         }
 
 
-        return "listUser";
+        return "admin/listUser";
     }
 
 
@@ -81,7 +179,7 @@ public class AdminController {
 //        System.out.println(currentUser);
         User currentUser = service.findByEmail(email);
         model.addAttribute("userDetail",currentUser);
-        return "editUserDetail";
+        return "admin/editUserDetail";
     }
 
     @Transactional
@@ -118,6 +216,8 @@ public class AdminController {
 
         return "redirect:/admin/editUserDetail/"+user.getEmail()+"?success";
     }
+
+
 
 
 }

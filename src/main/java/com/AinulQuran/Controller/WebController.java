@@ -1,15 +1,9 @@
 package com.AinulQuran.Controller;
 
 
-import com.AinulQuran.Ayatperayat;
-import com.AinulQuran.Dataforchart;
-import com.AinulQuran.Dataforhighlight;
-import com.AinulQuran.Surah;
+import com.AinulQuran.*;
 import com.AinulQuran.model.*;
-import com.AinulQuran.repository.Malay_translationRepository;
-import com.AinulQuran.repository.UserVocab;
-import com.AinulQuran.repository.surahindexesrepo;
-import com.AinulQuran.repository.wbwRepository;
+import com.AinulQuran.repository.*;
 import com.AinulQuran.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -46,6 +40,8 @@ public class WebController {
     @Autowired
     private wbwRepository wbwrepo;
 
+
+
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -66,17 +62,13 @@ public class WebController {
 
 
 
-    @GetMapping("/admin")
-    public String admin(Model model ){
 
-        long totalUser=service.count();
-
-        model.addAttribute("UserInfo",totalUser);
-
-        return "admin";
-    }
     @GetMapping("/search")
-    public String search(){
+    public String search(Model model){
+
+        List<surahindexes> allSurah=surahindexrepo.findAll();
+        model.addAttribute("surahList",allSurah);
+
         return "search";
     }
 
@@ -84,6 +76,7 @@ public class WebController {
     public String error(){
         return "error";
     }
+
 
 
     @GetMapping("highlight")
@@ -136,9 +129,6 @@ public class WebController {
         }
 
 
-
-
-
         List<surahindexes> listindex=surahindexrepo.findAll();
 //        Dataforhighlight data=new Dataforhighlight();
         List<Dataforhighlight> data = new ArrayList<>();
@@ -159,9 +149,6 @@ public class WebController {
 
         }
 
-
-
-
         model.addAttribute("highlightcss",listofhighlighted);
         model.addAttribute("test",data);
         model.addAttribute("word",words);
@@ -169,25 +156,65 @@ public class WebController {
     }
 
     @GetMapping("/surah/{chapter}")
-    public String greeting(@PathVariable("chapter") int chapter, Model model)  {
+    public String surahview(@PathVariable("chapter") int chapter, Model model)  {
 
-        List<Malay_translation> malay=malayrepo.findBySura(chapter);
-        if(chapter>114){
-            return "redirect:/";
+        int totalAyatcount;
+        List<wbw> wbwperayat;
+
+        List<Malay_translation> malay_translations;
+
+        totalAyatcount= Math.toIntExact(malayrepo.countBySura(chapter));
+
+
+
+        malay_translations=malayrepo.findBySura(chapter);
+
+        Map<String, List<wbw>> map = new LinkedHashMap<String,List<wbw>>();
+
+        for(int i=0;i<totalAyatcount;i++){
+
+            int ayat=i+1;
+            wbwperayat=wbwrepo.findBychapterAndAyat(chapter,ayat);
+            wbw arabicnumeric=new wbw();
+            arabicnumeric.setWordarabic(toArabicNum(ayat));
+            arabicnumeric.setWordenglish(""+ayat+"");
+            wbwperayat.add(arabicnumeric);
+            map.put(malay_translations.get(i).getText(),wbwperayat);
         }
-        Surah x = new Surah(chapter,malay);
 
-        //set repo from this controller to pass into Surah class
-        //
-        x.setWbwrepo(wbwrepo);
+        model.addAttribute("Surah",map);
 
-        Ayatperayat db=x.getSurah();
+        surahindexes surahdetail=surahindexrepo.findBysurano(chapter);
 
-        model.addAttribute("surahName",x.getSurahName());
-        model.addAttribute("Surah",db.map);
+        model.addAttribute("surahDetail",surahdetail);
+
+        model.addAttribute("chapter",chapter);
 
         return "surahview";
     }
+
+    public String toArabicNum(int n){
+        String ArabicNum=n+"";
+        ArabicNum=ArabicNum.replace("0","۰");
+        ArabicNum=ArabicNum.replace("1","١");
+        ArabicNum=ArabicNum.replace("2","٢");
+        ArabicNum=ArabicNum.replace("3","٣");
+        ArabicNum=ArabicNum.replace("4","٤");
+        ArabicNum=ArabicNum.replace("5","٥");
+        ArabicNum=ArabicNum.replace("6","٦");
+        ArabicNum=ArabicNum.replace("7","٧");
+        ArabicNum=ArabicNum.replace("8","٨");
+        ArabicNum=ArabicNum.replace("9","٩");
+
+
+        ArabicNum="﴾" +ArabicNum;
+
+        ArabicNum=ArabicNum+"﴿";
+
+
+        return ArabicNum;
+    }
+
 
 
 

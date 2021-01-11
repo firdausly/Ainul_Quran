@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="bg-light">
+<div class="col-lg-2 ml-0 pl-0 pr-0 shadow-lg bg-dark" id="sidebarAdmin">
+    <div class="list-group list-group-flush ">
+        <a th:href="@{/admin}" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
+
+
+        <a href="#profilesetting" data-toggle="collapse" class="list-group-item list-group-item-action bg-dark text-light">
+            Profile Setting
+            <i class="fa fa-chevron-down " style="float:right" aria-hidden="true"></i>
+
+        </a>
+        <!--                submenu item-->
+        <div id="profilesetting" class="collapse">
+            <a th:href="@{/changepass}" class="list-group-item list-group-item-action bg-dark text-light pl-5">Change Password</a>
+            <a th:href="@{/edit}" class="list-group-item list-group-item-action bg-dark text-light pl-5">Edit Profile </a>
+
+        </div>
+
+
+
+        <a href="#manageuser" data-toggle="collapse" class="list-group-item list-group-item-action bg-dark text-light">
+            Manage User
+            <i class="fa fa-chevron-down " style="float:right" aria-hidden="true"></i>
+
+        </a>
+        <!--                submenu item-->
+        <div id="manageuser" class="collapse">
+            <a th:href="@{/admin/listUser}" class="list-group-item list-group-item-action bg-dark text-light pl-5">List/Delete/Edit User</a>
+            <a th:href="@{/admin/addUser}" class="list-group-item list-group-item-action bg-dark text-light pl-5">Add New User</a>
+        </div>
+
+
+        <a href="#managesurah" data-toggle="collapse" class="list-group-item list-group-item-action bg-dark text-light">
+            Manage Surah
+            <i class="fa fa-chevron-down " style="float:right" aria-hidden="true"></i>
+
+        </a>
+        <!--                submenu item-->
+        <div id="managesurah" class="collapse">
+            <a th:href="@{/admin/listSurah}" class="list-group-item list-group-item-action bg-dark text-light pl-5">List/Edit Surah</a>
+        </div>
+
+
+    </div>
+
+</div>
+</body>
+</html>

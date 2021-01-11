@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface surahindexesrepo extends JpaRepository<surahindexes, Integer > {
 
-    List<surahindexes> findBysurano(int surano);
+    surahindexes findBysurano(int surano);
+
+
 
 }
