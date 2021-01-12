@@ -102,6 +102,7 @@ public class VocabularyController {
 
         User currentUser=service.findByUsername(currentusername);
         List<user_vocab> listuservocabulary=uservocabrepo.findByUsername(currentusername);
+
         long count=0;
         for(int i=0;i<listuservocabulary.size();i++){
             String arabicwordvocabulary=listuservocabulary.get(i).getVocab();
@@ -118,10 +119,33 @@ public class VocabularyController {
 
         ArrayList<String> percentagePerSurah=new ArrayList<>();
 
-        
 
-        String totalPercentageLearnedString=String.format("%.4f",totalPercentageLearned)+"";
+        for(int i=1;i<=114;i++){
+            //count total word per Surah.
+            int totalWordPerSurah=Integer.parseInt(wbwrepo.countBychapter(i)+"");
+
+            int countPerSurah=0;
+            for(int j=0;j<listuservocabulary.size();j++){
+                String arabicwordvocabulary=listuservocabulary.get(j).getVocab();
+
+                //count matching saved word frequency Per ayat in Current chapter index
+                // and add it to count var
+                countPerSurah+=wbwrepo.countBychapterAndWordarabic(i,arabicwordvocabulary);
+            }
+
+
+            //total frequency of all saved word / total word count per Surah
+            double totalPercentageLearnedPerSurah=(double)countPerSurah/(double)totalWordPerSurah*100;
+            //format the floating point
+            String totalPercentageLearnedPerSurahString=String.format("%.3f",totalPercentageLearnedPerSurah)+"";
+            percentagePerSurah.add(totalPercentageLearnedPerSurahString);
+        }
+
+
+
+        String totalPercentageLearnedString=String.format("%.3f",totalPercentageLearned)+"";
         model.addAttribute("totalpercentage",totalPercentageLearnedString);
+        model.addAttribute("totalpercentagepersurah",percentagePerSurah);
         model.addAttribute("wbw",listuservocabulary);
 
 
@@ -175,7 +199,7 @@ public class VocabularyController {
 
         for(int i=0;i<chapterlist.size();i++){
             int chapter=chapterlist.get(i);
-            String percentage=String.format("%.4f",calculate(chapter,word))+"%";
+            String percentage=String.format("%.2f",calculate(chapter,word))+"%";
             stringofanalysis.add("Chapter: "+chapter+" Percentage: "+percentage+"%");
         }
 
@@ -206,55 +230,55 @@ public class VocabularyController {
         return percentage;
     }
 
-    @GetMapping("/vocab/predict/{surah1}/{surah2}")
-    public String predict(Model model,@PathVariable("surah1") int surah1
-            ,@PathVariable("surah2") int surah2){
-
-        Collection<wbw> wordSurah1=wbwrepo.findBychapter(surah1);
-        Collection<wbw> wordSurah2=wbwrepo.findBychapter(surah2);
-
-        ArrayList<String> listword1=new ArrayList();
-        ArrayList<String> listword2=new ArrayList();
-
-        for (wbw wbw: wordSurah1
-             ) {
-            listword1.add(wbw.getWordarabic());
-        }
-
-        for (wbw wbw: wordSurah2
-        ) {
-            listword2.add(wbw.getWordarabic());
-        }
-
-
-        Collection listOne=listword1;
-        Collection listTwo=listword2;
-
-        int count=0;
-        System.out.println(listOne);
-        System.out.println(listTwo);
-
-        //find similar word and list out
-        listOne.retainAll(listTwo);
-
-        int countinOne=0;
-        int countinTwo=0;
-
-        for (Object wordarabic:listOne
-             ) {
-            String word=wordarabic.toString();
-            countinOne+=wbwrepo.countBychapterAndWordarabic(surah1,word);
-            countinTwo+=wbwrepo.countBychapterAndWordarabic(surah2,word);
-        }
-
-
-        System.out.println(listOne);
-        System.out.println(countinOne+" - "+countinTwo);
-
-        model.addAttribute("similar",listOne);
-
-
-        return "predict";
-    }
+//    @GetMapping("/vocab/predict/{surah1}/{surah2}")
+//    public String predict(Model model,@PathVariable("surah1") int surah1
+//            ,@PathVariable("surah2") int surah2){
+//
+//        Collection<wbw> wordSurah1=wbwrepo.findBychapter(surah1);
+//        Collection<wbw> wordSurah2=wbwrepo.findBychapter(surah2);
+//
+//        ArrayList<String> listword1=new ArrayList();
+//        ArrayList<String> listword2=new ArrayList();
+//
+//        for (wbw wbw: wordSurah1
+//             ) {
+//            listword1.add(wbw.getWordarabic());
+//        }
+//
+//        for (wbw wbw: wordSurah2
+//        ) {
+//            listword2.add(wbw.getWordarabic());
+//        }
+//
+//
+//        Collection listOne=listword1;
+//        Collection listTwo=listword2;
+//
+//        int count=0;
+//        System.out.println(listOne);
+//        System.out.println(listTwo);
+//
+//        //find similar word and list out
+//        listOne.retainAll(listTwo);
+//
+//        int countinOne=0;
+//        int countinTwo=0;
+//
+//        for (Object wordarabic:listOne
+//             ) {
+//            String word=wordarabic.toString();
+//            countinOne+=wbwrepo.countBychapterAndWordarabic(surah1,word);
+//            countinTwo+=wbwrepo.countBychapterAndWordarabic(surah2,word);
+//        }
+//
+//
+//        System.out.println(listOne);
+//        System.out.println(countinOne+" - "+countinTwo);
+//
+//        model.addAttribute("similar",listOne);
+//
+//
+//        return "predict";
+//    }
 
 }

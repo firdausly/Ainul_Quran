@@ -13,6 +13,7 @@ import com.AinulQuran.dto.UserRegistrationDto;
 import com.AinulQuran.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder passwordEncoder;
 
 
+    @Cacheable("findalluser")
     public List<User> findAll() {
 
         return (List<User>) userRepository.findAll();
@@ -46,6 +48,7 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
 
     @Override
     public Optional<User> findById(Long id) {

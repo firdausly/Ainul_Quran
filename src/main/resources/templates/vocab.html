@@ -79,7 +79,8 @@
 
                         </button>
 
-                        <a th:href="@{/vocab/viewword/{word}(word=${list.vocab})}"  th:text="${list.vocab}">
+                        <a class="d-print-none" th:href="@{/vocab/viewword/{word}(word=${list.vocab})}"
+                           th:text="${list.vocab}">
                         </a>
 
 
@@ -90,18 +91,50 @@
 
         </div>
         <div class="col-lg-10">
-            <h2 th:inline="text">Total Percentage of Quran Completion based on your saved Vocabulary is  </h2>
-            <h2 th:inline="text">[[${totalpercentage}]] %
-                <button data-toggle="collapse"  class="btn btn-outline-primary fa fa-info-circle" data-target="#percentageInfo"></button>
+            <div id="theWholeQuran">
+                <h2 th:inline="text">Total Percentage of Quran Completion based on your saved Vocabulary is  </h2>
+                <h2 th:inline="text" class="text-dark">[[${totalpercentage}]] %
+                    <button data-toggle="collapse"  class="d-print-none btn btn-outline-primary fa fa-info-circle" data-target="#percentageInfo"></button>
 
-            </h2>
+                </h2>
 
-            <div id="percentageInfo" class="collapse">
-                Calculation of the percentage is done by calculating the frequency of all your saved word divided by the total word in the Quran
+                <div id="percentageInfo" class="collapse">
+                    Calculation of the percentage is done by calculating the frequency of all your saved word divided by the total word in the Quran
+                </div>
+                <div class="progress" style="height:35px">
+                    <div class="progress-bar text-dark" role="progressbar"
+                         th:style="'width:' + ${totalpercentage} + '%'"
+                         th:aria-valuenow="${totalpercentage}"
+                         aria-valuemin="0"
+                         aria-valuemax="100"
+                         th:text="${totalpercentage} + ' %'" ></div>
+                </div>
+
             </div>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" th:style="'width:' + ${totalpercentage} + '%'" th:aria-valuenow="${totalpercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+            <hr>
+            <h2 th:inline="text">Total Percentage of Quran Completion Per Surah based on your saved Vocabulary:  </h2>
+
+            <div class="d-flex flex-wrap">
+            <th:block th:each="percentage,iterStat : ${totalpercentagepersurah}">
+                <div id="flexitem" class="col-3">
+                    <p th:inline="text">Chapter  [[${iterStat.count}]]</p>
+                    <div class="progress text-dark" style="height:35px;">
+                        <div class="progress-bar" role="progressbar"
+                             th:style="'width:' + ${percentage} + '%'"
+                             th:aria-valuenow="${percentage}"
+                             th:text="${percentage} + ' %'"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+
+                </div>
+
+
+            </th:block>
             </div>
+
+
+
+
         </div>
 
     </div>

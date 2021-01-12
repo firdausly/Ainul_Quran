@@ -190,11 +190,6 @@ public class AdminController {
         Optional<User> currentUser=service.findById(user.getId());
 
 
-
-
-//        System.out.println(currentUser.get().getRoles());
-//        System.out.println(user.getRoles());
-
         //set the password first before deleting
         user.setPassword(currentUser.get().getPassword());
 

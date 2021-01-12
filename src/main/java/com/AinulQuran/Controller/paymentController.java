@@ -190,7 +190,6 @@ public class paymentController {
 
             //then save a new instance.. if using edit the existing data in the roles table
             //will not be deleted.
-//
             if(userRepo.findByUsername(currentuser.getUsername()) ==null){
                 service.normalSave(currentuser);
             }

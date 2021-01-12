@@ -6,6 +6,7 @@ import com.AinulQuran.model.*;
 import com.AinulQuran.repository.*;
 import com.AinulQuran.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.xml.crypto.Data;
@@ -169,51 +171,49 @@ public class WebController {
 
         malay_translations=malayrepo.findBySura(chapter);
 
+
         Map<String, List<wbw>> map = new LinkedHashMap<String,List<wbw>>();
 
         for(int i=0;i<totalAyatcount;i++){
 
             int ayat=i+1;
+
+
+
             wbwperayat=wbwrepo.findBychapterAndAyat(chapter,ayat);
-            wbw arabicnumeric=new wbw();
-            arabicnumeric.setWordarabic(toArabicNum(ayat));
-            arabicnumeric.setWordenglish(""+ayat+"");
-            wbwperayat.add(arabicnumeric);
+
             map.put(malay_translations.get(i).getText(),wbwperayat);
+
         }
 
         model.addAttribute("Surah",map);
 
         surahindexes surahdetail=surahindexrepo.findBysurano(chapter);
 
+        int previousSurahAyatCount=0;
+        if(chapter>1 && chapter <= 114){
+            previousSurahAyatCount=surahindexrepo.findBysurano(chapter-1).getAyacount();
+        }
+
+
         model.addAttribute("surahDetail",surahdetail);
 
         model.addAttribute("chapter",chapter);
 
+        RestTemplate restTemplate= new RestTemplate();
+
+        Audio audio = restTemplate.getForObject(
+                "http://api.alquran.cloud/edition/format/audio", Audio.class);
+
+
+        model.addAttribute("previousSuraAyaCount",previousSurahAyatCount);
+
+        model.addAttribute("editionDetails",audio.getData());
+
         return "surahview";
     }
 
-    public String toArabicNum(int n){
-        String ArabicNum=n+"";
-        ArabicNum=ArabicNum.replace("0","۰");
-        ArabicNum=ArabicNum.replace("1","١");
-        ArabicNum=ArabicNum.replace("2","٢");
-        ArabicNum=ArabicNum.replace("3","٣");
-        ArabicNum=ArabicNum.replace("4","٤");
-        ArabicNum=ArabicNum.replace("5","٥");
-        ArabicNum=ArabicNum.replace("6","٦");
-        ArabicNum=ArabicNum.replace("7","٧");
-        ArabicNum=ArabicNum.replace("8","٨");
-        ArabicNum=ArabicNum.replace("9","٩");
 
-
-        ArabicNum="﴾" +ArabicNum;
-
-        ArabicNum=ArabicNum+"﴿";
-
-
-        return ArabicNum;
-    }
 
 
 

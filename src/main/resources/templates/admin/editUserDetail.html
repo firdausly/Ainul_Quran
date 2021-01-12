@@ -26,7 +26,7 @@
             <div th:if="${param.success}">
                 <div class="alert alert-info">successfully edited user details</div>
             </div>
-            <form th:action="@{/admin/saveUserDetail}" th:object="${userDetail}" method="post">
+            <form th:action="@{/admin/saveUserDetail}" th:if="${userDetail}" th:object="${userDetail}" method="post">
 
                 <div class="form-group">
                     <label for="firstName" class="control-label">Id</label>
