@@ -2,17 +2,18 @@ package com.AinulQuran.Controller;
 
 import com.AinulQuran.dto.UserRegistrationDto;
 import com.AinulQuran.model.User;
+import com.AinulQuran.model.userPayment;
+import com.AinulQuran.model.user_vocab;
 import com.AinulQuran.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Controller
@@ -53,4 +54,6 @@ public class addUserController {
         userService.save(userDto);
         return "redirect:/admin/addUser?success";
     }
+
+
 }

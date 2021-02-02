@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ainul Quran</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="/webjars/jquery/jquery.min.js" ></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body class="bg-light">
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
+<div class="container">
+
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Pricing</h1>
+        <p class="lead">Upgrade your account now to unlock full access of the web content.</p>
+    </div>
+
+    <div class="container">
+        <div class="card-deck mb-3 text-center">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Free</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">Rm 0 </h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Browse/ read all Surah</li>
+                        <li>Play Surah audio</li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Pro</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title" th:inline="text">Rm [[${price}]] </h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Browse/ read all Surah</li>
+                        <li>Play Surah audio</li>
+                        <li>Save word to vocabulary list</li>
+                        <li>View visualization of progress for saved vocabulary</li>
+                        <li>Keep Track of progress through the saved vocabulary</li>
+                    </ul>
+                    <a th:href="@{/payment/createBill}" class="btn btn-lg btn-block btn-primary">Upgrade Account</a>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+</div>
+</div>
+</body>
+</html>

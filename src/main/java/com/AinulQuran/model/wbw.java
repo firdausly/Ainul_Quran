@@ -10,11 +10,15 @@ import javax.persistence.*;
 public class wbw {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+    @Column(name = "chapter")
     private int chapter;
+
+    @Column(name = "ayat")
     private int ayat;
+
+    @Column(name = "word")
     private int word;
 
     @Column(name = "word_arabic")
@@ -30,17 +34,6 @@ public class wbw {
 
 
     public wbw() {};
-
-    public wbw(Integer id, int chapter, int ayat, int word, String wordarabic, String wordenglish, String wordmalay, String wordtransliteration) {
-        this.id = id;
-        this.chapter = chapter;
-        this.ayat = ayat;
-        this.word = word;
-        this.wordarabic = wordarabic;
-        this.wordenglish = wordenglish;
-        this.wordmalay = wordmalay;
-        this.wordtransliteration = wordtransliteration;
-    }
 
     public Integer getId() {
         return id;
@@ -105,7 +98,6 @@ public class wbw {
     public void setWordtransliteration(String wordtransliteration) {
         this.wordtransliteration = wordtransliteration;
     }
-
 
     @Override
     public String toString() {

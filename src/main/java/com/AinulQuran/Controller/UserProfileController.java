@@ -29,7 +29,7 @@ public class UserProfileController {
 
         User currentUser=service.findByUsername(currentUserName);
         model.addAttribute("user",currentUser);
-        return "save";
+        return "profile/save";
     }
 
     @PostMapping("/save")
@@ -56,6 +56,6 @@ public class UserProfileController {
 
         model.addAttribute("UserInfo",currentUser);
 
-        return "profile";
+        return "profile/profile";
     }
 }

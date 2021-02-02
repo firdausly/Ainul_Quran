@@ -23,14 +23,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+        final String ADMIN = "ADMIN";
 
 
         http
                 .authorizeRequests()
-                .antMatchers("/admin","/admin/**","/paid","/paid/**").hasRole("ADMIN")
-                .antMatchers("/paid",
-                        "/paid/**").hasRole("PAID")
+                .antMatchers("/vocab", "/vocab/**").hasAnyRole("PAID",ADMIN)
+                .antMatchers("/admin","/admin/**").hasRole(ADMIN)
                 .antMatchers(
                         "/register",
                         "/",

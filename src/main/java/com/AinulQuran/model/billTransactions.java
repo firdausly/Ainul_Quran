@@ -15,4 +15,20 @@ public class billTransactions {
     public String billpaymentAmount;
     public String billpaymentInvoiceNo;
     public String billPaymentDate;
+
+    @Override
+    public String toString() {
+        return "billTransactions{" +
+                "billName='" + billName + '\'' +
+                ", billDescription='" + billDescription + '\'' +
+                ", billTo='" + billTo + '\'' +
+                ", billEmail='" + billEmail + '\'' +
+                ", billPhone='" + billPhone + '\'' +
+                ", billStatus='" + billStatus + '\'' +
+                ", billpaymentStatus='" + billpaymentStatus + '\'' +
+                ", billpaymentAmount='" + billpaymentAmount + '\'' +
+                ", billpaymentInvoiceNo='" + billpaymentInvoiceNo + '\'' +
+                ", billPaymentDate='" + billPaymentDate + '\'' +
+                '}';
+    }
 }

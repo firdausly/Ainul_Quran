@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ainul Quran</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="/webjars/jquery/jquery.min.js" ></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body class="bg-light">
+
+
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
+
+
+
+<div class="container mt-5 clearfilter">
+    <div class="row">
+        <div class="col-lg-4 border border-top-0 border-left-0 border-bottom-0 ">
+        <h2>Surah List</h2>
+            <br>
+            <ul class="list-group" id="myList">
+                <th:block th:each="surah: ${surahList}" >
+                    <li class="list-group-item">
+                        <a th:href="@{/surah/{id}(id=${surah.surano})}" >
+                            <span class="badge badge-primary" th:text="${surah.surano}"></span>
+                            <span class="badge badge-secondary" th:text="${surah.surahtype}"></span>
+                            <span th:text="${surah.namearb} + ' - ' + ${surah.nameroman}"></span>
+                            <br>
+                            <i th:text="${surah.nameeng}"></i>
+                        </a>
+
+
+                    </li>
+                </th:block>
+
+            </ul>
+        </div>
+
+
+        <div class="col-lg-8 mt-5">
+            <h2>Search for Surah</h2>
+            <hr>
+            <input class="form-control" id="myInput" type="text" placeholder="Enter Surah number or name">
+
+
+        </div>
+
+    </div>
+
+
+
+</div>
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myList li").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+</body>
+</html>

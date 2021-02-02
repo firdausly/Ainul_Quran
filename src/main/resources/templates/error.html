@@ -19,6 +19,9 @@
             <i class="fa fa-exclamation-triangle fa-5x" aria-hidden="true"></i>
 
             <div>Opps!.. something has gone wrong.. The page could not be found!</div>
+            <p sec:authorize="!hasRole('ROLE_PAID')">Or you Could be not has access to this resource!
+            consider upgrading now!</p>
+
             <hr>
             <a href="javascript:history.back()" class="btn btn-primary">Back</a>
 

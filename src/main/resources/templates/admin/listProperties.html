@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ainul Quran</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+
+
+</head>
+<body class="bg-light">
+<style>
+    html,body {
+  height: 100%;
+}
+</style>
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
+
+
+    <div class="row ml-0 mr-0 pl-0 h-100">
+        <th:block th:insert="fragments/sidebarAdmin.html :: #sidebarAdmin"></th:block>
+        <div class="col-lg-9 border border-left-0 border-top-0 border-bottom-0">
+            <h2>List of properties</h2>
+            <div th:if="${param.success}" class="alert alert-success alert-dismissible  ">Changes saved.
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">X</span>
+                </button>
+            </div>
+            <table id="example" class="table" style="width:100% !important">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Name</th>
+                    <th>Value</th>
+                    <th>Edit</th>
+
+                </tr>
+                </thead>
+            </table>
+
+
+
+
+
+        </div>
+
+
+
+
+</div>
+
+
+<script src="/webjars/jquery/jquery.min.js" ></script>
+<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script charset="UTF-8" th:inline="javascript">
+var data = [[${propertiesList}]];
+
+
+
+$(document).ready(function() {
+    $('#example').DataTable({
+    data: data,
+    columns: [
+        { data: 'id' },
+        { data: 'name' },
+        { data: 'value' },
+         { data: null, render: function ( data, type, row ) {
+                var editContent = '<button type="button" id="' + data.name  +'"  onClick="edit(this.id)" class="btn btn-primary"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i>';
+                return editContent;
+            } }
+
+
+    ]
+    });
+});
+
+
+
+       function edit(id) {
+    location.href="/admin/editProperties/"+id;
+    }
+
+
+</script>
+
+
+<th:block th:if="${propertiesDetail}">
+
+    <div id="edit" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+
+                    <form th:action="@{/admin/saveProperties}" th:object="${propertiesDetail}" method="post">
+
+                        <div class="form-group">
+                            <label for="id" class="control-label">id</label>
+                            <input id="id" class="form-control" th:field="*{id}" readonly="readonly" />
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="name" class="control-label">Properties Name</label> <input
+                                id="name" class="form-control" th:field="*{name}" readonly="readonly"/>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="value" class="control-label">Properties Value</label> <input
+                                id="value" class="form-control" th:field="*{value}" />
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Edit</button>
+                            <a th:href="@{/admin/paymentInfo}"  class="btn btn-default" >Close</a>
+                        </div>
+
+
+                    </form>
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+      $("#edit").modal({
+      backdrop: 'static',
+      keyboard: false
+      });
+  </script>
+
+</th:block>
+
+
+
+</body>
+</html>

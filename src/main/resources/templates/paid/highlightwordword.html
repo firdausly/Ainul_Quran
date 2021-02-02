@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ainul Quran</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+ .sticky {
+
+  position: sticky;
+	top:50px;
+	z-index:2;
+	font-size:1.4rem;
+}
+
+.container-sticky {
+  display: flex;
+    align-items: flex-start;
+}
+
+
+</style>
+</head>
+<body class="bg-light">
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
+<div class="container">
+
+    <div>
+        <table class="table table-bordered" >
+         <thead>
+         <tr class="container-sticky">
+             <th>Surah</th>
+             <th>Word</th>
+         </tr>
+         </thead>
+            <tbody>
+            <th:block th:each="list: ${chapterDetail}">
+                <tr class="container-sticky">
+
+                    <td class="sticky" id="surano" th:text="${list.key}"></td>
+
+                    <td>
+                        <div class="d-flex flex-row-reverse flex-wrap">
+                        <th:block th:each="listofword: ${list.value}">
+                            <div class="border shadow-sm p-1"
+                                 th:id="'c'+${listofword.chapter}+'a'+${listofword.ayat}+'w'+${listofword.word}"
+                                 onclick="highlight(this.id)">
+                            <p th:text="${listofword.wordarabic}"
+                                ></p>
+
+
+                            </div>
+                    </th:block>
+                        </div>
+                    </td>
+
+
+
+                </tr>
+
+
+            </th:block>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script src="/webjars/jquery/jquery.min.js" ></script>
+<script th:inline="javascript">
+    var data = [[${highlightedWord}]];
+
+
+data.forEach(myFunction);
+
+function myFunction(item, index) {
+  var choosen="#"+item;
+  $(choosen).addClass("btn btn-info");
+}
+
+function highlight(id) {
+
+     var n = id.indexOf("a");
+     var surano = id.substr(1,n-1);
+     var url="/surah/"+surano+"#"+id;
+     location.href = url;
+
+}
+
+
+
+
+
+</script>
+</body>
+</html>

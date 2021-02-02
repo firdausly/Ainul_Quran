@@ -9,7 +9,7 @@ public class Malay_translation {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer index;
+    private Integer id;
 
     private int sura;
     private int aya;
@@ -18,23 +18,32 @@ public class Malay_translation {
     private String text;
 
 
+    @Override
+    public String toString() {
+        return "Malay_translation{" +
+                "index=" + id +
+                ", sura=" + sura +
+                ", aya=" + aya +
+                ", text='" + text + '\'' +
+                '}';
+    }
 
     public Malay_translation() {}
 
 
     public Malay_translation(Integer index, int sura, int aya, String text) {
-        this.index= index;
+        this.id= index;
         this.sura = sura;
         this.aya = aya;
         this.text = text;
     }
 
-    public Integer getIndex() {
-        return index;
+    public Integer getId() {
+        return id;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public int getSura() {

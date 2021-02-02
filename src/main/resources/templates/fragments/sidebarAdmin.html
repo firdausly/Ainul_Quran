@@ -44,6 +44,21 @@
         <!--                submenu item-->
         <div id="managesurah" class="collapse">
             <a th:href="@{/admin/listSurah}" class="list-group-item list-group-item-action bg-dark text-light pl-5">List/Edit Surah</a>
+            <a th:href="@{/admin/listTranslation}" class="list-group-item list-group-item-action bg-dark text-light pl-5">List/Edit Translationperayat</a>
+        </div>
+
+
+
+        <a href="#managepayment" data-toggle="collapse" class="list-group-item list-group-item-action bg-dark text-light">
+            Manage Payment
+            <i class="fa fa-chevron-down " style="float:right" aria-hidden="true"></i>
+
+        </a>
+        <!--                submenu item-->
+        <div id="managepayment" class="collapse">
+            <a th:href="@{/admin/listProperties}" class="list-group-item list-group-item-action bg-dark text-light pl-5">List Payment Properties</a>
+            <a th:href="@{/admin/listPayment}" class="list-group-item list-group-item-action bg-dark text-light pl-5">List User Payment</a>
+
         </div>
 
 

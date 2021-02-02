@@ -8,11 +8,11 @@
 		<version>2.2.6.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.Firstapp</groupId>
-	<artifactId>Firstapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Firstapp</name>
-	<description>Demo project for Spring Boot</description>
+	<groupId>com.AinulQuran</groupId>
+	<artifactId>AinulQuran</artifactId>
+	<version>0.0.1</version>
+	<name>AinulQuran</name>
+	<description></description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -21,13 +21,6 @@
 
 
 	<dependencies>
-<!--		<dependency>-->
-<!--			<groupId>com.jqurantree</groupId>-->
-<!--			<artifactId>jqurantree</artifactId>-->
-<!--			<version>1.0</version>-->
-<!--			<systemPath>${project.basedir}/src/main/resources/lib/jqurantree-1.0.0.jar</systemPath>-->
-<!--		</dependency>-->
-<!--		&lt;!&ndash; https://mvnrepository.com/artifact/com.google.code.gson/gson &ndash;&gt;-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -78,6 +71,7 @@
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.3</version>
 		</dependency>
 
 		<dependency>
@@ -98,11 +92,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>1.9.3</version>
-		</dependency>
+
 
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
@@ -128,29 +118,17 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.4.0.905</version>
+			</plugin>
+
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<plugin>
-				<groupId>com.googlecode.addjars-maven-plugin</groupId>
-				<artifactId>addjars-maven-plugin</artifactId>
-				<version>1.0.2</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>add-jars</goal>
-						</goals>
-						<configuration>
-							<resources>
-								<resource>
-									<directory>${project.basedir}/src/main/resources/lib/</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+
 		</plugins>
 
 	</build>

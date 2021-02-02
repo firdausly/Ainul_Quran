@@ -5,6 +5,7 @@ import com.AinulQuran.dto.createBill;
 import com.AinulQuran.model.*;
 import com.AinulQuran.repository.UserPaymentRepo;
 import com.AinulQuran.repository.UserRepository;
+import com.AinulQuran.repository.propertiesrepo;
 import com.AinulQuran.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,10 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class paymentController {
@@ -42,7 +40,19 @@ public class paymentController {
     @Autowired
     private UserRepository userRepo;
 
+    @Autowired
+    private propertiesrepo properties;
 
+    @GetMapping("/payment/pricing")
+    public String pricing(Model model) {
+
+        String price=properties.findByName("toyyibbillamount").getValue();
+
+        price=price.replace("0"," ");
+
+        model.addAttribute("price",price);
+        return "payment/pricing";
+    }
 
     @GetMapping("/payment/createBill")
     public String createBill(Model model){
@@ -51,11 +61,12 @@ public class paymentController {
 
         if(paymentRepo.findByUsername(currentusername)!=null){
             userPayment payment=paymentRepo.findByUsername(currentusername);
-            String billCode=payment.getBillCode();
+            String billCode=payment.getBillcode();
             String status=payment.getStatus();
 
             if(status.equals("success")){
                 model.addAttribute("alreadysuccess","");
+                model.addAttribute("invoice",payment);
                 return "payment/confirmpay";
             }
 
@@ -85,14 +96,21 @@ public class paymentController {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String createBillApiUrl="https://dev.toyyibpay.com/index.php/api/createBill";
 
-        createBill.setUserSecretKey("vyn1qq8b-j4kb-r06k-26vo-usvprmpjdk34");
-        createBill.setCategoryCode("ukqoiqhf");
-        createBill.setBillCallbackUrl("http://localhost:8080/payment/callback");
-        createBill.setBillReturnUrl("http://localhost:8080/payment/callback");
-        createBill.setBillAmount(500);
-        createBill.setBillContentEmail("Thank you for subscribing to Ainul Quran!");
+        String createBillApiUrl=properties.findByName("toyyibcreatebillapiurl").getValue();
+        String userSecretKey=properties.findByName("toyyibusersecretkey").getValue();
+        String categoryCode=properties.findByName("toyyibcategorycode").getValue();
+        String billCallbackUrl=properties.findByName("toyyibcallbackurl").getValue();
+        String billReturnUrl=properties.findByName("toyyibreturnurl").getValue();
+        int billAmount=Integer.parseInt(properties.findByName("toyyibbillamount").getValue());
+        String billContentEmail=properties.findByName("toyyibbillcontentemail").getValue();
+
+        createBill.setUserSecretKey(userSecretKey);
+        createBill.setCategoryCode(categoryCode);
+        createBill.setBillCallbackUrl(billCallbackUrl);
+        createBill.setBillReturnUrl(billReturnUrl);
+        createBill.setBillAmount(billAmount);
+        createBill.setBillContentEmail(billContentEmail);
 
         if (result.hasErrors()) {
             return "payment/createBill";
@@ -137,10 +155,9 @@ public class paymentController {
         userPayment newPayment=new userPayment();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String currentusername=auth.getName();
-
         newPayment.setUsername(currentusername);
         newPayment.setStatus("pending");
-        newPayment.setBillCode(billCode);
+        newPayment.setBillcode(billCode);
         paymentRepo.save(newPayment);
 
 
@@ -158,24 +175,26 @@ public class paymentController {
                                @RequestParam String order_id,
                                @RequestParam String transaction_id,Model model) throws JsonProcessingException {
 
-        System.out.println(status_id+" "+billcode+" "+transaction_id);
 
-        if(checkStatus(billcode)){
+        billTransactions transactions=status(billcode);
+        System.out.println(transactions);
+        if(transactions!=null &&transactions.billpaymentStatus.equals("1")){
 
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String currentusername=auth.getName();
             userPayment payment=paymentRepo.findByUsername(currentusername);
             payment.setStatus("success");
+            payment.setInvoiceno(transactions.billpaymentInvoiceNo);
+            String paymountamount=transactions.billpaymentAmount;
+            payment.setAmountreceived(paymountamount);
+
             paymentRepo.save(payment);
 
 
 
             User currentuser=service.findByUsername(currentusername);
-            //set new role
-//            Collection<Role> role=new ArrayList<>();
-//            role.add(new Role("ROLE_PAID_USER"));
-//            role.add(new Role("ROLE_USER"));
+
 
             //set the password first before deleting
             currentuser.setPassword(currentuser.getPassword());
@@ -194,6 +213,9 @@ public class paymentController {
                 service.normalSave(currentuser);
             }
 
+
+            model.addAttribute("invoice",payment);
+            model.addAttribute("pleaserelog","relog");
             model.addAttribute("alreadysuccess","success");
             return "payment/confirmpay";
         }
@@ -204,7 +226,7 @@ public class paymentController {
     }
 
 
-    public boolean checkStatus(String billCode) throws JsonProcessingException {
+    public billTransactions status(String billCode) throws JsonProcessingException {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -223,8 +245,8 @@ public class paymentController {
         ResponseEntity<String> responsegetBillTransaction = restTemplate.postForEntity(
                 billTransactionsurl, requestBillTransaction , String.class);
 
-        if (responsegetBillTransaction.getBody().contains("No data found")){
-            return false;
+        if (Objects.requireNonNull(responsegetBillTransaction.getBody()).contains("No data found")){
+            return null;
         }
 
         billTransactions[] billTransactions=objectMapper.readValue(responsegetBillTransaction.getBody(),
@@ -232,12 +254,9 @@ public class paymentController {
 
 
 
-        if(billTransactions[0].billpaymentStatus.equals("1")){
 
-            return true;
-        }
 
-        return false;
+        return billTransactions[0];
 
     }
 

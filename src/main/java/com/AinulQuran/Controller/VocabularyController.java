@@ -1,10 +1,7 @@
 package com.AinulQuran.Controller;
 
 import com.AinulQuran.Dataforchart;
-import com.AinulQuran.model.User;
-import com.AinulQuran.model.dictionary;
-import com.AinulQuran.model.user_vocab;
-import com.AinulQuran.model.wbw;
+import com.AinulQuran.model.*;
 import com.AinulQuran.repository.*;
 import com.AinulQuran.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Dictionary;
-import java.util.List;
-
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.*;
 
 
 @Controller
@@ -39,12 +31,17 @@ public class VocabularyController {
     @Autowired
     private wbwRepository wbwrepo;
 
+    @Autowired
+    private surahindexesrepo surahindexrepo;
+
 
     @GetMapping("/vocab/{vocab}")
     public String savevocab(@PathVariable("vocab") String vocabulary, Model model){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String currentusername=auth.getName();
+
+        boolean checkword=wbwrepo.findByWordarabic(vocabulary).isEmpty();
 
         User currentUser=service.findByUsername(currentusername);
         user_vocab user_vocabulary=new user_vocab();
@@ -55,7 +52,12 @@ public class VocabularyController {
         if(check!=null ){
             String error="The word already existed in your vocabulary!";
             model.addAttribute("errorMessage",error);
-            return "vocab";
+            return "paid/vocab";
+        }
+        else if(checkword){
+            String error="The word is not a valid word in Quran!";
+            model.addAttribute("errorMessage",error);
+            return "paid/vocab";
         }
         else {//save if not exist yet
             uservocabrepo.save(user_vocabulary);
@@ -80,7 +82,7 @@ public class VocabularyController {
         if(check==null ){
             String error="The word does not exist in your vocabulary!";
             model.addAttribute("errorMessage",error);
-            return "vocab";
+            return "paid/vocab";
         }
         else {//delete
             uservocabrepo.deleteByUsernameAndVocab(currentusername,vocabulary);
@@ -90,7 +92,7 @@ public class VocabularyController {
         }
 
 
-        return "vocab";
+        return "paid/vocab";
     }
 
     @GetMapping("/vocab")
@@ -151,7 +153,7 @@ public class VocabularyController {
 
 
 
-        return "vocab";
+        return "paid/vocab";
     }
 
 
@@ -168,6 +170,11 @@ public class VocabularyController {
 
         model.addAttribute("wbw",listuservocabulary);
         List<wbw> wordselected=wbwrepo.findByWordarabic(word);
+
+        if(wordselected.isEmpty()){
+            return "redirect:/vocab"+"?wordnotexist";
+        }
+
         int totalWord=Integer.parseInt(wbwrepo.count()+"");
         int selectedWordCount=wordselected.size();
 
@@ -195,15 +202,15 @@ public class VocabularyController {
             test.add(new Dataforchart(i+"",count+""));
         }
 
-        ArrayList<String> stringofanalysis=new ArrayList<>();
+        Map<String,String> wordOccurence=new LinkedHashMap<>();
 
         for(int i=0;i<chapterlist.size();i++){
             int chapter=chapterlist.get(i);
-            String percentage=String.format("%.2f",calculate(chapter,word))+"%";
-            stringofanalysis.add("Chapter: "+chapter+" Percentage: "+percentage+"%");
+            String percentage=String.format("%.2f",calculate(chapter,word));
+            wordOccurence.put(chapter+"",percentage);
         }
 
-        model.addAttribute("dataforpercentage",stringofanalysis);
+        model.addAttribute("dataforpercentage",wordOccurence);
 
         model.addAttribute("dataforchart",test);
 
@@ -212,7 +219,7 @@ public class VocabularyController {
 
 
 
-        return "viewsameword";
+        return "paid/viewsameword";
     }
 
     public double calculate(int chapter,String word){
@@ -281,4 +288,45 @@ public class VocabularyController {
 //        return "predict";
 //    }
 
+    @GetMapping("/vocab/highlight/{word}")
+    public String highlightword(@PathVariable("word") String words, Model model){
+
+
+        List<wbw> highlightList=wbwrepo.findByWordarabic(words);
+        ArrayList<Integer> listOfChapter=new ArrayList<Integer>();
+        ArrayList<String> listofIdForHighlight=new ArrayList<String>();
+        for(int i=0;i<highlightList.size();i++){
+            int chapter=highlightList.get(i).getChapter();
+            int ayat=highlightList.get(i).getAyat();
+            int word=highlightList.get(i).getWord();
+            listofIdForHighlight.add("c"+chapter+"a"+ayat+"w"+word);
+            //for first index, add first without checking.
+            if(i==0){
+                listOfChapter.add(chapter);
+                continue;
+            }
+            if(listOfChapter.contains(chapter)){
+                continue;
+            } else{
+                listOfChapter.add(chapter);
+            }
+
+        }
+        Map<Integer,List<wbw>> chapterAndWbwList=new LinkedHashMap<Integer, List<wbw>>();
+
+        for(int i=0;i<listOfChapter.size();i++){
+            int currentChapter=listOfChapter.get(i);
+            List<wbw> listWbwForCurrentChapter=(wbwrepo.findBychapter(currentChapter));
+            chapterAndWbwList.put(currentChapter,listWbwForCurrentChapter);
+
+        }
+
+
+        model.addAttribute("chapterDetail",chapterAndWbwList);
+        model.addAttribute("highlightedWord",listofIdForHighlight);
+
+
+
+        return "paid/highlightwordword";
+    }
 }

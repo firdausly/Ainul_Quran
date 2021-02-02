@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ainul Quran</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style type="text/css">
+.progress-text-size {
+ font-size:1.2rem;
+}
+</style>
+</head>
+<body class="bg-light">
+<th:block th:insert="fragments/navigation.html :: #mainNav"></th:block>
+
+
+
+
+<div class="container mt-5">
+
+    <div class="row">
+        <div class="col-lg-2">
+            <h2>Your Saved Vocabulary: </h2>
+            <div class="list-group">
+                <th:block th:each="list: ${wbw}">
+
+                    <div class="list-group-item">
+                        <button type="button" th:id="${list.vocab}" onClick="confirmDelete(this.id)"
+                                class="d-print-none btn btn-danger">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+
+                        </button>
+
+                        <a class="" th:href="@{/vocab/viewword/{word}(word=${list.vocab})}"
+                           th:text="${list.vocab}">
+                        </a>
+
+
+                        </div>
+                </th:block>
+
+            </div>
+
+        </div>
+        <div class="col-lg-10">
+                <div th:if="${param.wordnotexist}" class="alert alert-warning" role="alert">
+                    Word Dont exist!!!
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+            <div id="theWholeQuran">
+                <h2 class="d-inline">Total Percentage of Quran Completion based on your saved Vocabulary :
+
+
+                    <button data-toggle="collapse" class=" d-print-none btn btn-outline-primary fa fa-info-circle collapsed" data-target="#percentageInfo" aria-expanded="false"></button>
+
+                    <button class="d-print-none btn btn-outline-primary fa fa-print" onclick="window.print()"></button>
+
+
+                </h2>
+
+                <div id="percentageInfo" class="lead collapse">
+                    <em>Calculation of the percentage is done by calculating the frequency of all your saved word divided by the total word in the Quran
+                    </em>
+                </div>
+                <div class="progress" style="height:35px">
+                    <div class="progress-bar text-dark progress-text-size" role="progressbar"
+                         th:style="'width:' + ${totalpercentage} + '%'"
+                         th:aria-valuenow="${totalpercentage}"
+                         aria-valuemin="0"
+                         aria-valuemax="100"
+                         th:text="${totalpercentage} + ' %'" ></div>
+                </div>
+
+            </div>
+            <hr>
+            <h2 th:inline="text">Total Percentage of Quran Completion Per Surah based on your saved Vocabulary:  </h2>
+
+            <div class="d-flex flex-wrap mb-5">
+            <th:block th:each="percentage,iterStat : ${totalpercentagepersurah}">
+                <div id="flexitem" class="col-3">
+                    <p th:inline="text" class="lead ">Chapter  [[${iterStat.count}]]</p>
+                    <div class="progress bg-dark" style="height:35px;">
+                        <div class="progress-bar bg-info progress-text-size" role="progressbar"
+                             th:style="'width:' + ${percentage} + '%'"
+                             th:aria-valuenow="${percentage}"
+                             th:text="${percentage} + ' %'"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+
+                </div>
+
+
+            </th:block>
+            </div>
+
+
+
+
+        </div>
+
+    </div>
+    <div id="deleteModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body" style="text-align:center">
+                    <i class="fa fa-exclamation-triangle fa-5x" aria-hidden="true"></i>
+
+                    <div>Are you sure you want to delete <span id="wordselected"></span> from your vocabulary list?</div>
+                   <hr>
+                    <a class="btn btn-danger" id="removelink">Yes</a>
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src="/webjars/jquery/jquery.min.js" ></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+    function confirmDelete(id) {
+    $("#wordselected").html(id);
+    $("#removelink").attr("href", "/remove/"+id);
+    $("#deleteModal").modal();
+    }
+    </script>
+
+
+    <th:block th:if="${errorMessage}">
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div th:text="${errorMessage}"></div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <a href="javascript:history.back()" class="btn btn-default" >Back</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <script>
+      $("#myModal").modal();
+  </script>
+    </th:block>
+
+    <th:block th:if="${successMessage}">
+        <div id="successmodal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div th:text="${successMessage}"></div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <a href="javascript:history.back()" class="btn btn-default" >Back</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <script>
+      $("#successmodal").modal();
+  </script>
+
+    </th:block>
+
+
+</div>
+</body>
+</html>

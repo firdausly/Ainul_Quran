@@ -35,7 +35,7 @@ public class ChangePassController {
 
     @GetMapping
     public String showChangepassForm(Model model) {
-        return "changepass";
+        return "profile/changepass";
     }
 
     @PostMapping
@@ -53,7 +53,7 @@ public class ChangePassController {
 
             }
             if (result.hasErrors()) {
-                return "changepass";
+                return "profile/changepass";
             }
 
             //set password

@@ -6,11 +6,10 @@
     <title>Ainul Quran</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
-    <script src="/webjars/jquery/jquery.min.js" ></script>
-    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
 
 </head>
-<body class="bg-light">>
+<body class="bg-light">
 <style>
     html,body {
   height: 100%;
@@ -23,8 +22,8 @@
         <th:block th:insert="fragments/sidebarAdmin.html :: #sidebarAdmin"></th:block>
         <div class="col-lg-9 border border-left-0 border-top-0 border-bottom-0">
             <div class="d-flex flex-row justify-content-start">
-                <div class="p-4 m-3 btn btn-success">
-                    <div class="row">
+                <div class="p-5 m-3 btn btn-success">
+                    <div class="row mx-auto">
                         <div class="">
                             <i aria-hidden="true" class="fa fa-users fa-4x"></i>
                         </div>
@@ -32,22 +31,89 @@
                             <p class="font-weight-light">Total Users
 
                                 <i style="font-size:1.5rem" th:text="${UserInfo}"></i>
-                            </p></div>
+                            </p>
+                        </div>
                     </div>
 
 
                 </div>
 
-                <div class="p-5 m-3 btn btn-secondary">Flex item 2</div>
-                <div class="p-5 m-3 btn btn-primary">Flex item 3</div>
+
+                <div class="p-5 m-3 btn btn-primary">
+                    <div class="row mx-auto">
+                        <div class="">
+                            <i aria-hidden="true" class="fa fa-credit-card-alt fa-4x"></i>
+                        </div>
+                        <div class="col-6">
+                            <p class="font-weight-light">Total Revenue
+
+                                <i style="font-size:1.5rem" th:text="'RM '+${revenue}"></i>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
+
+            <div id="chartUserType" class="col-4">
+                <p class="font-weight-light text-center">User Type
+                    <canvas id="myChart" width="400" height="400"></canvas>
+
+
+            </div>
+
+
         </div>
 
     </div>
 
 
+<script src="/webjars/jquery/jquery.min.js" ></script>
+<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha256-t9UJPrESBeG2ojKTIcFLPGF7nHi2vEc7f5A2KpH/UBU=" crossorigin="anonymous"></script>
 
 
+<script th:inline="javascript">
+var ctx = document.getElementById('myChart').getContext('2d');
+var admin=[[${countadmin}]];
+var user=[[${countuser}]];
+var paid=[[${countpaid}]];
+
+var data = {
+      datasets: [{
+
+        data: [user, paid, admin],
+        backgroundColor: [
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(255, 206, 86, 0.7)'
+        ],
+        borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)'
+        ],
+        borderWidth: 1
+    }],
+     labels: [
+        'Normal User',
+        'Paid User',
+        'Admin'
+    ]
+};
+
+var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: {
+    legend: {
+        display: false
+    }
+    }
+
+});
+</script>
 
 
 

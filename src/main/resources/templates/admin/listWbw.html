@@ -43,7 +43,7 @@
                     <th>Arabic Word</th>
                     <th>English translation</th>
                     <th>Malay Translation</th>
-                    <th>Edit</th>
+                    <th>Edit | Add | Delete</th>
                 </tr>
                 </thead>
             </table>
@@ -59,7 +59,25 @@
 
 
 
+<div id="deleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body" style="text-align:center">
+                <i class="fa fa-exclamation-triangle fa-5x" aria-hidden="true"></i>
+
+                <div>Are you sure you want to delete <span id="wordselected"></span> ?</div>
+                <hr>
+                <a class="btn btn-danger" id="removelink">Yes</a>
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
 
 <script src="/webjars/jquery/jquery.min.js" ></script>
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
@@ -73,7 +91,8 @@ $(document).ready(function() {
     $('#example').DataTable({
     data: data,
     columns: [
-        { data: 'chapter' },
+        { data: 'chapter',
+          "orderData": [ 0, 1, 2 ]},
         { data: 'ayat' },
         { data: 'word' },
         { data: 'wordarabic' },
@@ -81,7 +100,10 @@ $(document).ready(function() {
         { data: 'wordmalay' },
          { data: null, render: function ( data, type, row ) {
                 var editContent = '<button type="button" id=" ' + data.id  +' "  onClick="edit(this.id)" class="btn btn-primary"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i>';
-                return editContent;
+                var addContent = '<button type="button" id="' + data.id  +' "  onClick="add(this.id)" class="btn btn-success"> <i class="fa fa-plus" aria-hidden="true"></i>';
+                var deleteContent = '<button type="button" id="' + data.id  +' "  onClick="confirmDelete(this.id)" class="btn btn-danger"> <i class="fa fa-trash-o" aria-hidden="true"></i>';
+
+                return editContent+' '+ addContent+' '+deleteContent;
             } }
     ]
     });
@@ -92,6 +114,20 @@ $(document).ready(function() {
     function edit(id) {
     location.href="/admin/editWbwDetail/"+id;
     }
+
+     function add(id) {
+    location.href="/admin/addWbwAfter/"+id;
+    }
+
+      function confirmDelete(id) {
+    $("#wordselected").html(id);
+    $("#removelink").attr("href", "/admin/removeWbw/"+id);
+    $("#deleteModal").modal();
+
+    }
+
+
+
 
 </script>
 <th:block th:if="${errorMessage}">
@@ -117,6 +153,86 @@ $(document).ready(function() {
     <script>
       $("#myModal").modal();
   </script>
+</th:block>
+
+
+<th:block th:if="${newwbw}">
+
+    <div id="addWbw" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+
+                    <form th:action="@{/admin/addWbwAfter}" th:object="${newwbw}" method="post">
+
+
+                        <div class="form-group">
+                            <label for="chapteradd" class="control-label">Chapter </label>
+                            <input id="chapteradd" class="form-control" th:field="*{chapter}" readonly="readonly" />
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="ayatadd" class="control-label">Ayat </label> <input
+                                id="ayatadd" class="form-control" th:field="*{ayat}" readonly="readonly" />
+
+                        <div class="form-group">
+                                <label for="wordadd" class="control-label">Word</label> <input
+                                    id="wordadd" class="form-control" th:field="*{word}" readonly="readonly" />
+
+                        </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="wordarabicadd" class="control-label">Arabic Word</label> <input
+                                id="wordarabicadd" class="form-control" th:field="*{wordarabic}" />
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="wordenglishadd" class="control-label">English Translation</label> <input
+                                id="wordenglishadd" class="form-control" th:field="*{wordenglish}" />
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="wordmalayadd" class="control-label">Malay Translation</label> <input
+                                id="wordmalayadd" class="form-control" th:field="*{wordmalay}" />
+
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Edit</button>
+                            <a href="javascript:history.back()"  class="btn btn-default" >Close</a>
+                        </div>
+
+
+                    </form>
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+      $("#addWbw").modal({
+      backdrop: 'static',
+      keyboard: false
+      });
+  </script>
+
 </th:block>
 
 
@@ -148,11 +264,11 @@ $(document).ready(function() {
                             <label for="ayat" class="control-label">Ayat </label> <input
                                 id="ayat" class="form-control" th:field="*{ayat}" readonly="readonly" />
 
-                        <div class="form-group">
+                            <div class="form-group">
                                 <label for="word" class="control-label">Word</label> <input
-                                    id="word" class="form-control" th:field="*{word}" readonly="readonly" />
+                                    id="word" class="form-control" th:field="*{word}"  />
 
-                        </div>
+                            </div>
 
                         </div>
                         <div class="form-group">

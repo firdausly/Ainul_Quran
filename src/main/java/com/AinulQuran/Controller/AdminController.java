@@ -1,22 +1,13 @@
 package com.AinulQuran.Controller;
 
-import com.AinulQuran.model.User;
-import com.AinulQuran.model.surahindexes;
-import com.AinulQuran.model.user_vocab;
-import com.AinulQuran.model.wbw;
-import com.AinulQuran.repository.UserRepository;
-import com.AinulQuran.repository.UserVocab;
-import com.AinulQuran.repository.surahindexesrepo;
-import com.AinulQuran.repository.wbwRepository;
+import com.AinulQuran.model.*;
+import com.AinulQuran.repository.*;
 import com.AinulQuran.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.validation.Errors;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,14 +30,69 @@ public class AdminController {
     @Autowired
     private surahindexesrepo surahindexesrepo;
 
+    @Autowired
+    private propertiesrepo propertiesrepo;
+
+    @Autowired
+    private UserPaymentRepo paymentRepo;
+
+    @Autowired
+    private Malay_translationRepository translationRepository;
+
+
+
+
 
 
     @GetMapping("/admin")
     public String admin(Model model ){
 
+        List<userPayment> all=paymentRepo.findAll();
+
+        double amount = 0;
+        for(int i=0;i<all.size();i++){
+            String amountreceived=all.get(i).getAmountreceived();
+            if(amountreceived==null){
+                continue;
+            }
+             amount+=Double.parseDouble(amountreceived);
+        }
+
+
+
+
         long totalUser=service.count();
 
+        int countadmin=0;
+        int countuser=0;
+        int countpaid=0;
+
+        List<User> allUser=service.findAll();
+        for(int i=0;i<allUser.size();i++){
+            String roles=allUser.get(i).getRoles().toString();
+
+            boolean rolesContainsAdmin=roles.contains("ROLE_ADMIN");
+            boolean rolesContainsPaid=roles.contains("ROLE_PAID");
+            boolean rolesContainsUser=roles.contains("ROLE_USER");
+
+            if(rolesContainsAdmin && rolesContainsPaid && rolesContainsUser){
+                countadmin+=1;
+            }
+
+            if(!rolesContainsAdmin && rolesContainsPaid && rolesContainsUser){
+                countpaid+=1;
+            }
+
+            if(!rolesContainsAdmin && !rolesContainsPaid && rolesContainsUser){
+                countuser+=1;
+            }
+        }
+
+        model.addAttribute("countadmin",countadmin);
+        model.addAttribute("countpaid",countpaid);
+        model.addAttribute("countuser",countuser);
         model.addAttribute("UserInfo",totalUser);
+        model.addAttribute("revenue",amount);
 
         return "admin/admin";
     }
@@ -77,7 +123,7 @@ public class AdminController {
         Optional<wbw> wbwList = wbwRepository.findById(id);
 
 
-        if(wbwList==null){
+        if(wbwList.isEmpty()){
             return "admin/listSurah";
         }
 
@@ -89,7 +135,7 @@ public class AdminController {
     public String saveWbw(Model model,@ModelAttribute("wbwDetail") wbw wbw) {
 
 
-        if(wbwRepository.findById(wbw.getId())==null){
+        if(wbwRepository.findById(wbw.getId()).isEmpty()){
             model.addAttribute("errorMessage","Error, Cant find that Id");
             return "/admin/listSurah";
         }
@@ -110,6 +156,7 @@ public class AdminController {
 
     @GetMapping("/admin/editSurah/{surano}")
     public String editSurah(@PathVariable("surano") int surano,Model model){
+
 
 
         surahindexes currentSurah = surahindexesrepo.findBysurano(surano);
@@ -158,10 +205,23 @@ public class AdminController {
             if(!user_vocab.isEmpty()){
                 userVocabRepository.deleteByUsername(username);
             }
+
+
+            userPayment userPayments=paymentRepo.findByUsername(username);
+
+            //delete user payment info too
+            if(userPayments!=null){
+                paymentRepo.deleteByUsername(username);
+            }
+
+            //delete user
             userRepository.deleteByUsername(username);
 
 
-            String success="User "+username+" has been successfully deleted from your vocabulary list";
+
+
+
+            String success="User "+username+" has been successfully deleted ";
             model.addAttribute("successMessage",success);
 
         }
@@ -174,10 +234,13 @@ public class AdminController {
     @GetMapping("/admin/editUserDetail/{email}")
     public String editUserDetail(@PathVariable("email") String email,Model model){
 
-//        Optional<User> currentUserOptional=service.findById(id);
+//        Optional<User> currentUserOptional=service.find);
 //        User currentUser = currentUserOptional.get();
-//        System.out.println(currentUser);
+//
         User currentUser = service.findByEmail(email);
+        if(currentUser==null){
+            return "redirect:/admin/listUser";
+        }
         model.addAttribute("userDetail",currentUser);
         return "admin/editUserDetail";
     }
@@ -191,11 +254,18 @@ public class AdminController {
 
 
         //set the password first before deleting
-        user.setPassword(currentUser.get().getPassword());
+        currentUser.ifPresent(value -> user.setPassword(value.getPassword()));
+
+
+
+
+        //check if user is normal but has data in payment repo
+        if(!user.getRoles().toString().contains("ROLE_PAID")){
+            paymentRepo.deleteByUsername(user.getUsername());
+        }
 
         //delete first to delete all the existing roles too
-        userRepository.deleteByUsername(currentUser.get().getUsername());
-
+        currentUser.ifPresent(value -> userRepository.deleteByUsername(value.getUsername()));
         //then save a new instance.. if using edit the existing data in the roles table
         //will not be deleted.
 
@@ -212,6 +282,96 @@ public class AdminController {
         return "redirect:/admin/editUserDetail/"+user.getEmail()+"?success";
     }
 
+
+    @GetMapping("/admin/listProperties")
+    public String listProperties(Model model){
+        List<properties> propertiesList= propertiesrepo.findAll();
+
+        model.addAttribute("propertiesList", propertiesList);
+        return "admin/listProperties";
+    }
+
+    @GetMapping("/admin/editProperties/{name}")
+    public String editProperties(@PathVariable("name") String name ,Model model){
+
+       name=name.trim();
+       properties currentProperties=propertiesrepo.findByName(name);
+
+        if(currentProperties==null){
+            return "redirect:/admin/listProperties";
+        }
+
+
+
+        model.addAttribute("propertiesDetail", currentProperties);
+        return "admin/listProperties";
+    }
+
+
+    @PostMapping("/admin/saveProperties")
+    public String saveProperties(Model model,@ModelAttribute("propertiesDetail") properties currentProperties) {
+
+
+        if(propertiesrepo.findByName(currentProperties.getName())==null){
+            model.addAttribute("errorMessage","Error, Cant find that surah");
+            return "/admin/listProperties";
+        }
+        propertiesrepo.save(currentProperties);
+        return "redirect:/admin/listProperties"+"?success";
+    }
+
+
+    @GetMapping("/admin/listPayment")
+    public String listPayment(Model model){
+        List<userPayment> paymentList= paymentRepo.findAll();
+
+        model.addAttribute("paymentList", paymentList);
+        return "admin/listPayment";
+    }
+
+
+
+
+
+    @GetMapping("/admin/listTranslation")
+    public String listTranslationPerayat(Model model){
+
+        List<Malay_translation> allTranslation=translationRepository.findAll();
+
+        model.addAttribute("translationList", allTranslation);
+        return "admin/listTranslation";
+    }
+
+    @GetMapping("/admin/editTranslation/{id}")
+    public String editTranslation(@PathVariable("id") int ayat,Model model){
+
+
+        Optional<Malay_translation> translation=translationRepository.findById(ayat);
+
+        if(translation.isEmpty()){
+            return "redirect:/admin/listTranslation";
+        }
+
+
+
+        model.addAttribute("translationDetail", translation);
+        return "admin/listTranslation";
+    }
+
+
+    @PostMapping("/admin/saveTranslation")
+    public String saveTranslation(Model model,@ModelAttribute("translationDetail") Malay_translation translation) {
+
+        System.out.println(translation);
+        Optional<Malay_translation> choosentranslation=translationRepository.findById(translation.getId());
+        System.out.println(choosentranslation);
+        if(choosentranslation.isEmpty()){
+            model.addAttribute("errorMessage","Error, Cant find that surah");
+            return "/admin/listTranslation";
+        }
+        translationRepository.save(translation);
+        return "redirect:/admin/listTranslation"+"?success";
+    }
 
 
 

@@ -1,27 +1,27 @@
 package com.AinulQuran.Controller;
 
 
-import com.AinulQuran.*;
-import com.AinulQuran.model.*;
-import com.AinulQuran.repository.*;
+import com.AinulQuran.model.Audio;
+import com.AinulQuran.model.Malay_translation;
+import com.AinulQuran.model.surahindexes;
+import com.AinulQuran.model.wbw;
+import com.AinulQuran.repository.Malay_translationRepository;
+import com.AinulQuran.repository.UserVocab;
+import com.AinulQuran.repository.surahindexesrepo;
+import com.AinulQuran.repository.wbwRepository;
 import com.AinulQuran.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.xml.crypto.Data;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -54,7 +54,7 @@ public class WebController {
 
     @GetMapping("/about")
     public String about(){
-        return "about";
+        return "redirect:/#about";
     }
 
     @GetMapping("/login")
@@ -71,7 +71,7 @@ public class WebController {
         List<surahindexes> allSurah=surahindexrepo.findAll();
         model.addAttribute("surahList",allSurah);
 
-        return "search";
+        return "surah/search";
     }
 
     @GetMapping("/error")
@@ -81,81 +81,7 @@ public class WebController {
 
 
 
-    @GetMapping("highlight")
-    public String highlight(Model model){
 
-        List<surahindexes> listindex=surahindexrepo.findAll();
-//        Dataforhighlight data=new Dataforhighlight();
-        List<Dataforhighlight> data = new ArrayList<>();
-
-        //initialize table
-        for(int i=1;i<=114;i++){
-            List<wbw> listwbw=wbwrepo.findBychapter(i);
-            ArrayList<String> inte=new ArrayList<>();
-            for(int j=0;j<listwbw.size();j++){
-                int chapter=listwbw.get(j).getChapter();
-                int ayat=listwbw.get(j).getAyat();
-                int word=listwbw.get(j).getWord();
-
-                inte.add("c"+chapter+"a"+ayat+"w"+word);
-            }
-            data.add(new Dataforhighlight(i,inte));
-
-        }
-
-
-
-
-//        data.add(new Dataforhighlight(1,));
-//        List<wbw> list=wbwrepo.findAll();
-//        System.out.println(data);
-//        System.out.println(data);
-        model.addAttribute("test",data);
-        return "highlightword";
-    }
-
-    @GetMapping("highlight/{word}")
-    public String highlightword(@PathVariable("word") String words, Model model){
-
-
-        List<wbw> wordselected=wbwrepo.findByWordarabic(words);
-        ArrayList<String> listofhighlighted=new ArrayList<String>();
-        Set<Integer> chapterset=new HashSet<Integer>();
-
-        for(int i=0;i<wordselected.size();i++){
-            int chapter=wordselected.get(i).getChapter();
-            int ayat=wordselected.get(i).getAyat();
-            int word=wordselected.get(i).getWord();
-            listofhighlighted.add("c"+chapter+"a"+ayat+"w"+word);
-            chapterset.add(wordselected.get(i).getChapter());
-        }
-
-
-        List<surahindexes> listindex=surahindexrepo.findAll();
-//        Dataforhighlight data=new Dataforhighlight();
-        List<Dataforhighlight> data = new ArrayList<>();
-        ArrayList<Integer> chapterlist=new ArrayList<>(chapterset);
-        //initialize table
-        for(int i=0;i<chapterlist.size();i++){
-            int chapterofcontainedword=chapterlist.get(i);
-            List<wbw> listwbw=wbwrepo.findBychapter(chapterofcontainedword);
-            ArrayList<String> inte=new ArrayList<>();
-            for(int j=0;j<listwbw.size();j++){
-                int chapter=listwbw.get(j).getChapter();
-                int ayat=listwbw.get(j).getAyat();
-                int word=listwbw.get(j).getWord();
-
-                inte.add("c"+chapter+"a"+ayat+"w"+word);
-            }
-            data.add(new Dataforhighlight(chapterofcontainedword,inte));
-
-        }
-
-        model.addAttribute("highlightcss",listofhighlighted);
-        model.addAttribute("test",data);
-        model.addAttribute("word",words);
-        return "highlightwordword";
-    }
 
     @GetMapping("/surah/{chapter}")
     public String surahview(@PathVariable("chapter") int chapter, Model model)  {
@@ -165,34 +91,44 @@ public class WebController {
 
         List<Malay_translation> malay_translations;
 
-        totalAyatcount= Math.toIntExact(malayrepo.countBySura(chapter));
+        totalAyatcount= surahindexrepo.findBysurano(chapter).getAyacount();
 
 
 
         malay_translations=malayrepo.findBySura(chapter);
 
 
-        Map<String, List<wbw>> map = new LinkedHashMap<String,List<wbw>>();
+        Map<String, List<wbw>> surahMap = new LinkedHashMap<String,List<wbw>>();
 
         for(int i=0;i<totalAyatcount;i++){
 
             int ayat=i+1;
-
-
-
             wbwperayat=wbwrepo.findBychapterAndAyat(chapter,ayat);
-
-            map.put(malay_translations.get(i).getText(),wbwperayat);
+            surahMap.put(malay_translations.get(i).getText(),wbwperayat);
 
         }
 
-        model.addAttribute("Surah",map);
+
+
+        model.addAttribute("Surah",surahMap);
 
         surahindexes surahdetail=surahindexrepo.findBysurano(chapter);
 
-        int previousSurahAyatCount=0;
+
         if(chapter>1 && chapter <= 114){
-            previousSurahAyatCount=surahindexrepo.findBysurano(chapter-1).getAyacount();
+            int previousSurahAyatCount=0;
+
+            //loop to sum all the previous ayah to get the audio for the current ayat
+            //sumofpreviousayat + index of current ayat = current index of the ayat
+            for(int i=1;i<chapter;i++){
+                previousSurahAyatCount+=surahindexrepo.findBysurano(i).getAyacount();
+            }
+
+
+            model.addAttribute("previousSuraAyaCount",previousSurahAyatCount);
+
+        }else {
+            model.addAttribute("previousSuraAyaCount",0);
         }
 
 
@@ -206,11 +142,10 @@ public class WebController {
                 "http://api.alquran.cloud/edition/format/audio", Audio.class);
 
 
-        model.addAttribute("previousSuraAyaCount",previousSurahAyatCount);
-
+        assert audio != null;
         model.addAttribute("editionDetails",audio.getData());
 
-        return "surahview";
+        return "surah/surahview";
     }
 
 

@@ -17,14 +17,21 @@ public class userPayment {
     @Column(name = "billcode")
     private String billcode;
 
-    public userPayment() {
+    @Column(name = "invoiceno")
+    private String invoiceno;
+
+    @Column(name = "amountreceived")
+    private String amountreceived;
+
+    public String getAmountreceived() {
+        return amountreceived;
     }
 
-    public userPayment(Long id, String username, String status, String billCode) {
-        this.id = id;
-        this.username = username;
-        this.status = status;
-        this.billcode = billCode;
+    public void setAmountreceived(String amountreceived) {
+        this.amountreceived = amountreceived;
+    }
+
+    public userPayment() {
     }
 
     public Long getId() {
@@ -51,11 +58,31 @@ public class userPayment {
         this.status = status;
     }
 
-    public String getBillCode() {
+    public String getBillcode() {
         return billcode;
     }
 
-    public void setBillCode(String billCode) {
-        this.billcode = billCode;
+    public void setBillcode(String billcode) {
+        this.billcode = billcode;
+    }
+
+    public String getInvoiceno() {
+        return invoiceno;
+    }
+
+    public void setInvoiceno(String invoiceno) {
+        this.invoiceno = invoiceno;
+    }
+
+    @Override
+    public String toString() {
+        return "userPayment{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", status='" + status + '\'' +
+                ", billcode='" + billcode + '\'' +
+                ", invoiceno='" + invoiceno + '\'' +
+                ", amountreceived='" + amountreceived + '\'' +
+                '}';
     }
 }

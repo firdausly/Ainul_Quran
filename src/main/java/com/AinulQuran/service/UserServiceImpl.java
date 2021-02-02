@@ -13,7 +13,9 @@ import com.AinulQuran.dto.UserRegistrationDto;
 import com.AinulQuran.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -56,6 +58,8 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Caching(evict = {
+            @CacheEvict(value="findalluser",allEntries = true)})
     public User save(UserRegistrationDto registration) {
         User user = new User();
         user.setFirstName(registration.getFirstName());
@@ -72,6 +76,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+
+    @Caching(evict = {
+            @CacheEvict(value="findalluser",allEntries = true)})
     public User edit(User user){
         return userRepository.save(user);
     }

@@ -29,6 +29,20 @@
         <p class="lead display-4" th:if="${alreadysuccess}"> Successfully paid </p>
         <p class="lead" th:if="${alreadysuccess}"> payment received</p>
 
+        <th:block th:if="${invoice}">
+        <p class="lead" th:if="${invoice.username}" th:inline="text">Username: [[${invoice.username}]] </p>
+        <p class="lead" th:if="${invoice.status}" th:inline="text"> Status: [[${invoice.status}]]</p>
+        <p class="lead" th:if="${invoice.billcode}" th:inline="text">Bill Code: [[${invoice.billcode}]] </p>
+        <p class="lead" th:if="${invoice.invoiceno}" th:inline="text"> Invoice No : [[${invoice.invoiceno}]]</p>
+
+        </th:block>
+
+        <th:block th:if="${pleaserelog}">
+            <p class="lead">Please Logout and Re - login to apply upgrade to your account</p>
+            <a th:href="@{/logout}" >Logout </a>
+        </th:block>
+
+
 
         <a class="btn btn-success" th:unless="${alreadysuccess}" th:href="@{https://dev.toyyibpay.com/{billCode}(billCode=${billCode})}">Pay</a>
     </div>
