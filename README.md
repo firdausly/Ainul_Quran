@@ -1,10 +1,10 @@
-Prerequiste:
+### Prerequiste:
 Mysql database server
 IntelliJ ide
 Java JDK 11
 
 
-Step.
+### Step.
 1. Import ainulquran.sql into mysql database
 2. Open up project in intelliJ
 3. Configure application.properties in Src/Main/resources/application.properties by changing 
