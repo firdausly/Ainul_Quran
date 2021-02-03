@@ -12,5 +12,5 @@
   - source.database.username to your database username
   - and source.database.password to your password.
   - you can also change the server port if you want in the server.port.
-- 4. Now the application is ready to run, to run simply click on run in intelliJ and open up the application on localhost:<port>
+- 4. Now the application is ready to run, to run simply click on run in intelliJ and open up the application on browser by entering localhost:portnumber
 
