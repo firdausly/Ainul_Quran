@@ -1,7 +1,7 @@
 ### Prerequiste:
-Mysql database server
-IntelliJ ide
-Java JDK 11
+- Mysql database server
+- IntelliJ ide
+- Java JDK 11
 
 
 ### Step.
